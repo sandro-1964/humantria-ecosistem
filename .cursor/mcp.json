@@ -1,0 +1,13 @@
+{
+  "mcpServers": {
+    "supabase": {
+      "url": "https://mcp.supabase.com/mcp",
+      "args": [
+        "--project-ref=vpsqhmklecjvbnlhktbg"
+      ],
+      "env": {
+        "SUPABASE_ACCESS_TOKEN": "sbp_874ced76693f43b3d361c08463b4ed25dbba3358"
+      }
+    }
+  }
+}

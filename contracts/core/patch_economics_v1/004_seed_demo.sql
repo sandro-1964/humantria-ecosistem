@@ -76,7 +76,7 @@ INSERT INTO core.salary_structures (
     compensation_structure
 )
 SELECT 
-    'g0000000-0000-0000-0000-000000000001'::uuid,
+    'a1000000-0000-0000-0000-000000000001'::uuid,
     '00000000-0000-0000-0000-000000000001'::uuid,
     'c0000000-0000-0000-0000-000000000001'::uuid, -- SWE job
     jl.id, -- SWE-SR level
@@ -107,7 +107,7 @@ INSERT INTO core.salary_structures (
     compensation_structure
 )
 SELECT 
-    'g0000000-0000-0000-0000-000000000002'::uuid,
+    'a1000000-0000-0000-0000-000000000002'::uuid,
     '00000000-0000-0000-0000-000000000001'::uuid,
     'c0000000-0000-0000-0000-000000000001'::uuid, -- SWE job
     jl.id, -- SWE-MID level
@@ -138,7 +138,7 @@ INSERT INTO core.salary_structures (
     compensation_structure
 )
 SELECT 
-    'g0000000-0000-0000-0000-000000000003'::uuid,
+    'a1000000-0000-0000-0000-000000000003'::uuid,
     '00000000-0000-0000-0000-000000000001'::uuid,
     'c0000000-0000-0000-0000-000000000002'::uuid, -- PM job
     jl.id, -- PM-MID level
@@ -169,7 +169,7 @@ INSERT INTO core.salary_structures (
     compensation_structure
 )
 SELECT 
-    'g0000000-0000-0000-0000-000000000004'::uuid,
+    'a1000000-0000-0000-0000-000000000004'::uuid,
     '00000000-0000-0000-0000-000000000001'::uuid,
     'c0000000-0000-0000-0000-000000000003'::uuid, -- SALES-REP job
     jl.id, -- SALES-REP-SR level
@@ -200,7 +200,7 @@ INSERT INTO core.salary_structures (
     compensation_structure
 )
 SELECT 
-    'g0000000-0000-0000-0000-000000000005'::uuid,
+    'a1000000-0000-0000-0000-000000000005'::uuid,
     '00000000-0000-0000-0000-000000000001'::uuid,
     'c0000000-0000-0000-0000-000000000005'::uuid, -- ENG-MGR job
     jl.id, -- ENG-MGR-L1 level
@@ -237,7 +237,7 @@ INSERT INTO core.cost_parameters (
     cost_breakdown
 )
 SELECT 
-    'h0000000-0000-0000-0000-000000000001'::uuid,
+    'a2000000-0000-0000-0000-000000000001'::uuid,
     '00000000-0000-0000-0000-000000000001'::uuid,
     'c0000000-0000-0000-0000-000000000001'::uuid, -- SWE job
     jl.id, -- SWE-SR level
@@ -266,8 +266,8 @@ INSERT INTO core.cost_parameters (
     total_cost_factor,
     cost_breakdown
 )
-VALUES 
-    ('h0000000-0000-0000-0000-000000000002'::uuid,
+SELECT 
+    'a2000000-0000-0000-0000-000000000002'::uuid,
     '00000000-0000-0000-0000-000000000001'::uuid,
     'a0000000-0000-0000-0000-000000000002'::uuid, -- ENG org_unit
     'BRL',
@@ -275,7 +275,12 @@ VALUES
     50000.00, -- base_cost (custo médio do org_unit)
     40.0, -- overhead_rate (40%)
     1.80, -- total_cost_factor
-    '{"infrastructure": {"servers": 5000, "tools": 3000}, "overhead": {"management": 10000}}'::jsonb)
+    '{"infrastructure": {"servers": 5000, "tools": 3000}, "overhead": {"management": 10000}}'::jsonb
+WHERE EXISTS (
+    SELECT 1 FROM core.org_units 
+    WHERE id = 'a0000000-0000-0000-0000-000000000002'::uuid 
+    AND tenant_id = '00000000-0000-0000-0000-000000000001'::uuid
+)
 ON CONFLICT DO NOTHING;
 
 -- Cost parameter para Cost Center Engineering
@@ -290,8 +295,8 @@ INSERT INTO core.cost_parameters (
     total_cost_factor,
     cost_breakdown
 )
-VALUES 
-    ('h0000000-0000-0000-0000-000000000003'::uuid,
+SELECT 
+    'a2000000-0000-0000-0000-000000000003'::uuid,
     '00000000-0000-0000-0000-000000000001'::uuid,
     'b0000000-0000-0000-0000-000000000001'::uuid, -- CC-001 (Engineering)
     'BRL',
@@ -299,7 +304,12 @@ VALUES
     60000.00, -- base_cost
     35.0, -- overhead_rate
     1.75, -- total_cost_factor
-    '{"allocation": {"engineering": 100}}'::jsonb)
+    '{"allocation": {"engineering": 100}}'::jsonb
+WHERE EXISTS (
+    SELECT 1 FROM core.cost_centers 
+    WHERE id = 'b0000000-0000-0000-0000-000000000001'::uuid 
+    AND tenant_id = '00000000-0000-0000-0000-000000000001'::uuid
+)
 ON CONFLICT DO NOTHING;
 
 -- Cost parameter para Sales org_unit
@@ -314,8 +324,8 @@ INSERT INTO core.cost_parameters (
     total_cost_factor,
     cost_breakdown
 )
-VALUES 
-    ('h0000000-0000-0000-0000-000000000004'::uuid,
+SELECT 
+    'a2000000-0000-0000-0000-000000000004'::uuid,
     '00000000-0000-0000-0000-000000000001'::uuid,
     'a0000000-0000-0000-0000-000000000003'::uuid, -- SALES org_unit
     'BRL',
@@ -323,7 +333,12 @@ VALUES
     35000.00, -- base_cost
     30.0, -- overhead_rate
     1.65, -- total_cost_factor
-    '{"commission": {"rate": "20-40%"}, "overhead": {"management": 5000}}'::jsonb)
+    '{"commission": {"rate": "20-40%"}, "overhead": {"management": 5000}}'::jsonb
+WHERE EXISTS (
+    SELECT 1 FROM core.org_units 
+    WHERE id = 'a0000000-0000-0000-0000-000000000003'::uuid 
+    AND tenant_id = '00000000-0000-0000-0000-000000000001'::uuid
+)
 ON CONFLICT DO NOTHING;
 
 -- Cost parameter para Product Manager (job-level)
@@ -340,7 +355,7 @@ INSERT INTO core.cost_parameters (
     cost_breakdown
 )
 SELECT 
-    'h0000000-0000-0000-0000-000000000005'::uuid,
+    'a2000000-0000-0000-0000-000000000005'::uuid,
     '00000000-0000-0000-0000-000000000001'::uuid,
     'c0000000-0000-0000-0000-000000000002'::uuid, -- PM job
     jl.id, -- PM-MID level
@@ -373,7 +388,7 @@ INSERT INTO core.economic_benchmarks (
     effective_from
 )
 VALUES 
-    ('i0000000-0000-0000-0000-000000000001'::uuid,
+    ('a3000000-0000-0000-0000-000000000001'::uuid,
     NULL, -- global
     'salary',
     'BRL',
@@ -381,7 +396,7 @@ VALUES
     50, -- percentile (mediana)
     'market_survey',
     CURRENT_DATE),
-    ('i0000000-0000-0000-0000-000000000002'::uuid,
+    ('a3000000-0000-0000-0000-000000000002'::uuid,
     NULL, -- global
     'salary',
     'BRL',
@@ -389,7 +404,7 @@ VALUES
     75, -- percentile (75º)
     'market_survey',
     CURRENT_DATE),
-    ('i0000000-0000-0000-0000-000000000003'::uuid,
+    ('a3000000-0000-0000-0000-000000000003'::uuid,
     NULL, -- global
     'cost',
     'BRL',
@@ -413,7 +428,7 @@ INSERT INTO core.economic_benchmarks (
     effective_from
 )
 SELECT 
-    'i0000000-0000-0000-0000-000000000010'::uuid,
+    'a3000000-0000-0000-0000-000000000010'::uuid,
     '00000000-0000-0000-0000-000000000001'::uuid,
     'salary',
     'c0000000-0000-0000-0000-000000000001'::uuid, -- SWE job

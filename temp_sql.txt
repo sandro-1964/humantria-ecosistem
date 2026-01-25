@@ -1,4 +1,4 @@
--- HUMANTRÍA — CORE PATCH ECONOMICS V1 — FUNCTIONS
+﻿-- HUMANTRÍA — CORE PATCH ECONOMICS V1 — FUNCTIONS
 -- Status: PATCH (Core V1 frozen)
 -- Escopo: Funções governadas para Workforce Economics Engine
 -- Regras: SECURITY INVOKER, validações, eventos bridge-first, histórico automático

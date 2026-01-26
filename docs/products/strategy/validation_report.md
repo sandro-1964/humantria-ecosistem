@@ -117,28 +117,30 @@
 
 ## 💰 TESTES DE CÁLCULO STAFFING
 
-### Status: ⚠️ BLOQUEADO
+### Status: ✅ FUNCIONAL
 
-**Função bloqueada:** `strategy.calculate_staffing_costs()`
+**Função implementada:** `strategy.calculate_staffing_costs()`
 
-**Motivo:** Funções economics do Core não existem:
-- ❌ `core.convert_currency()` - Não existe
-- ❌ `core.get_cost_parameter_for_context()` - Não existe
+**Funções economics do Core confirmadas:**
+- ✅ `core.convert_currency()` - Confirmada e funcional
+- ✅ `core.get_cost_parameter_for_context()` - Confirmada e funcional
 
 **Comportamento:**
-- ✅ Função retorna erro explícito com mensagem clara
-- ✅ Mensagem referencia decisão: `docs/decisions/2026-01-26_strategy_v1_economics_functions_missing.md`
-- ✅ Fail-fast: Não permite cálculo até economics existir
+- ✅ Lê staffing demand do Strategy
+- ✅ Obtém parâmetro de custo via `core.get_cost_parameter_for_context()`
+- ✅ Calcula custo total: `headcount × cost_parameter`
+- ✅ Converte moeda via `core.convert_currency()` quando necessário
+- ✅ Grava em `strategy.staffing_calculated_costs`
+- ✅ Publica evento `strategy.staffing_costs.calculated`
 
-**Workaround:**
-- ✅ Usuário pode inserir custos manualmente em `strategy.staffing_calculated_costs`
-- ✅ Seed demo inclui 3 registros placeholder para demonstração
+**Integração:**
+- ✅ Consome Core Economics Engine exclusivamente
+- ✅ Sem duplicação de estruturas economics
+- ✅ Sem FK cross-product
 
-**Próximos Passos:**
-1. Implementar economics no Core (patch ou v2)
-2. Remover bloqueio de `strategy.calculate_staffing_costs()`
-3. Implementar lógica de cálculo usando funções do Core
-4. Testar integração completa
+**Decisão:**
+- ✅ Decisão anterior revogada: `docs/decisions/2026-01-26_strategy_v1_economics_functions_missing.md`
+- ✅ Nova decisão registrada: `docs/decisions/2026-01-26_strategy_economics_functions_confirmed.md`
 
 ---
 

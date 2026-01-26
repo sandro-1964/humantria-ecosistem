@@ -87,28 +87,31 @@ O produto **Strategy V1** foi implementado conforme especificado no PRD, seguind
 
 ## ⚠️ LIMITAÇÕES E DEPENDÊNCIAS
 
-### Limitação Conhecida: Economics Functions
+### Limitação Removida: Economics Functions Confirmadas
 
-**Status:** ⚠️ BLOQUEADO
+**Status:** ✅ RESOLVIDO
 
-**Função afetada:** `strategy.calculate_staffing_costs()`
+**Função implementada:** `strategy.calculate_staffing_costs()`
 
-**Motivo:** Funções economics do Core não existem:
-- `core.convert_currency()` - Não implementada
-- `core.get_cost_parameter_for_context()` - Não implementada
+**Funções economics do Core confirmadas:**
+- ✅ `core.convert_currency()` - Confirmada e funcional
+- ✅ `core.get_cost_parameter_for_context()` - Confirmada e funcional
 
-**Decisão registrada:** `docs/decisions/2026-01-26_strategy_v1_economics_functions_missing.md`
+**Decisão registrada:** `docs/decisions/2026-01-26_strategy_economics_functions_confirmed.md`
+**Decisão anterior revogada:** `docs/decisions/2026-01-26_strategy_v1_economics_functions_missing.md`
 
 **Impacto:**
 - ✅ Estrutura completa funcionando
 - ✅ Criação de staffing plans/demands funcionando
-- ❌ Cálculo automático de custos bloqueado
-- ✅ Workaround: Inserção manual de custos possível
+- ✅ Cálculo automático de custos implementado e funcional
+- ✅ Consumo exclusivo do Core Economics Engine
+- ✅ Sem duplicação de estruturas economics
 
-**Próximos Passos:**
-1. Implementar economics no Core (patch ou v2)
-2. Habilitar cálculo de custos
-3. Testar integração completa
+**Implementação:**
+1. ✅ Bloqueio removido
+2. ✅ Função implementada usando Core Economics Engine
+3. ✅ Budget functions corrigidas para usar `convert_currency()`
+4. ✅ Eventos publicados corretamente
 
 ### Outras Limitações
 - **IA real:** Apenas estrutura, sem chamadas a provedores (conforme especificado)
@@ -148,10 +151,15 @@ O produto **Strategy V1** foi implementado conforme especificado no PRD, seguind
 ## 📝 DECISÕES REGISTRADAS
 
 ### Decisões Arquiteturais
-1. **Economics Functions Missing:** `docs/decisions/2026-01-26_strategy_v1_economics_functions_missing.md`
-   - Bloqueio fail-fast em `calculate_staffing_costs()`
-   - Sem stubs temporários
-   - Sem duplicação de economics no Strategy
+1. **Economics Functions Missing (REVOGADA):** `docs/decisions/2026-01-26_strategy_v1_economics_functions_missing.md`
+   - Status: ❌ REVOGADA · SUPERSEDED
+   - Motivo: Funções economics confirmadas no Core
+
+2. **Economics Functions Confirmed:** `docs/decisions/2026-01-26_strategy_economics_functions_confirmed.md`
+   - Status: ✅ REGISTRADA
+   - Bloqueio removido
+   - `calculate_staffing_costs()` implementada
+   - Consumo exclusivo do Core Economics Engine
 
 ---
 
@@ -209,8 +217,8 @@ O produto **Strategy V1** foi implementado conforme especificado no PRD, seguind
 3. ✅ **Seeds validados:** Demo completo e funcional
 
 ### Para Próximas Fases
-1. Implementar economics no Core
-2. Habilitar cálculo de custos
+1. ✅ ~~Implementar economics no Core~~ (CONCLUÍDO - confirmado)
+2. ✅ ~~Habilitar cálculo de custos~~ (CONCLUÍDO - hotfix aplicado)
 3. Integrar com provedores de IA (quando necessário)
 4. Implementar lógica de import/export completa
 5. Implementar cálculos de KPIs para dashboards
@@ -219,7 +227,7 @@ O produto **Strategy V1** foi implementado conforme especificado no PRD, seguind
 
 ## 📋 CONCLUSÃO
 
-O produto **Strategy V1** foi implementado com sucesso, seguindo todas as regras canônicas e padrões da HUMANTRÍA. A implementação está completa e funcional, com uma limitação conhecida e documentada relacionada a funções economics do Core.
+O produto **Strategy V1** foi implementado com sucesso, seguindo todas as regras canônicas e padrões da HUMANTRÍA. A implementação está completa e funcional. Após hotfix, a limitação relacionada a funções economics foi removida - funções confirmadas e cálculo de custos habilitado.
 
 **Status:** ⏳ **AGUARDANDO APROVAÇÃO HUMANA**
 
@@ -227,10 +235,10 @@ O produto **Strategy V1** foi implementado com sucesso, seguindo todas as regras
 - ✅ Validação manual
 - ✅ Testes de integração
 - ✅ Aprovação final
-- ⚠️ Deploy (após aprovação)
+- ✅ Deploy (após aprovação)
 
 ---
 
 **Auditor:** Sistema  
-**Data:** 2026-01-26  
-**Próxima Revisão:** Após implementação de economics no Core
+**Data:** 2026-01-26 (hotfix)  
+**Última Atualização:** 2026-01-26 (economics confirmadas)

@@ -576,14 +576,11 @@ BEGIN
     END IF;
     
     -- Converte para base currency (se necessário)
-    -- NOTA: core.convert_currency() não existe ainda, então usa valor original se mesma moeda
     IF p_currency_code = v_base_currency THEN
         v_amount_base := p_amount_original_currency;
     ELSE
-        -- TODO: Quando core.convert_currency() existir, usar aqui
-        -- v_amount_base := core.convert_currency(p_currency_code, v_base_currency, p_amount_original_currency, CURRENT_DATE);
-        -- Por enquanto, assume 1:1 (será corrigido quando economics existir)
-        v_amount_base := p_amount_original_currency;
+        -- Usa core.convert_currency() do Core Economics Engine
+        v_amount_base := core.convert_currency(p_currency_code, v_base_currency, p_amount_original_currency, CURRENT_DATE);
     END IF;
     
     -- Valida item_type
@@ -709,8 +706,8 @@ BEGIN
         IF v_currency_code = v_base_currency THEN
             v_amount_base := p_amount_original_currency;
         ELSE
-            -- TODO: Quando core.convert_currency() existir, usar aqui
-            v_amount_base := p_amount_original_currency;
+            -- Usa core.convert_currency() do Core Economics Engine
+            v_amount_base := core.convert_currency(v_currency_code, v_base_currency, p_amount_original_currency, CURRENT_DATE);
         END IF;
         
         UPDATE strategy.budget_items SET
@@ -1155,7 +1152,7 @@ $$;
 
 COMMENT ON FUNCTION strategy.create_staffing_demand IS 'Cria staffing demand com validação e evento';
 
--- Calcular custos de staffing (BLOQUEADO - fail-fast)
+-- Calcular custos de staffing (consome Core Economics Engine)
 CREATE OR REPLACE FUNCTION strategy.calculate_staffing_costs(
     p_staffing_demand_id UUID
 )
@@ -1166,37 +1163,131 @@ AS $$
 DECLARE
     v_tenant_id UUID;
     v_calculated_cost_id UUID;
-    v_error_message TEXT;
+    v_demand RECORD;
+    v_cost_parameter NUMERIC;
+    v_cost_currency TEXT;
+    v_base_currency TEXT;
+    v_calculated_cost_original NUMERIC;
+    v_calculated_cost_base NUMERIC;
+    v_effective_date DATE;
 BEGIN
-    -- BLOQUEIO FAIL-FAST: Verifica se funções economics existem
-    -- Verifica core.convert_currency()
-    IF NOT EXISTS (
-        SELECT 1 FROM information_schema.routines 
-        WHERE routine_schema = 'core' 
-        AND routine_name = 'convert_currency'
-    ) THEN
-        RAISE EXCEPTION 'Economics functions not available in Core. Strategy requires core.convert_currency() and core.get_cost_parameter_for_context() to calculate staffing costs. See docs/decisions/2026-01-26_strategy_v1_economics_functions_missing.md';
+    v_tenant_id := foundation.get_current_tenant_id();
+    
+    IF v_tenant_id IS NULL THEN
+        RAISE EXCEPTION 'tenant_id não encontrado no contexto';
     END IF;
     
-    -- Verifica core.get_cost_parameter_for_context()
-    IF NOT EXISTS (
-        SELECT 1 FROM information_schema.routines 
-        WHERE routine_schema = 'core' 
-        AND routine_name = 'get_cost_parameter_for_context'
-    ) THEN
-        RAISE EXCEPTION 'Economics functions not available in Core. Strategy requires core.convert_currency() and core.get_cost_parameter_for_context() to calculate staffing costs. See docs/decisions/2026-01-26_strategy_v1_economics_functions_missing.md';
+    -- Busca staffing demand
+    SELECT 
+        sd.id,
+        sd.headcount,
+        sd.job_id,
+        sd.job_level_id,
+        sd.period_start,
+        sp.period_start AS plan_period_start
+    INTO v_demand
+    FROM strategy.staffing_demands sd
+    INNER JOIN strategy.staffing_plans sp ON sd.staffing_plan_id = sp.id
+    WHERE sd.id = p_staffing_demand_id AND sd.tenant_id = v_tenant_id;
+    
+    IF NOT FOUND THEN
+        RAISE EXCEPTION 'Staffing demand não encontrado ou não pertence ao tenant';
     END IF;
     
-    -- Se chegou aqui, as funções existem - implementar lógica
-    -- TODO: Implementar quando economics existir
-    -- v_tenant_id := foundation.get_current_tenant_id();
-    -- ... lógica de cálculo ...
+    -- Valida que job e job_level existem
+    IF v_demand.job_id IS NULL OR v_demand.job_level_id IS NULL THEN
+        RAISE EXCEPTION 'Staffing demand deve ter job_id e job_level_id para calcular custos';
+    END IF;
     
-    RAISE EXCEPTION 'Function not yet implemented. Economics functions exist but calculation logic pending.';
+    -- Obtém base currency do tenant
+    SELECT base_currency INTO v_base_currency
+    FROM foundation.tenant_settings
+    WHERE tenant_id = v_tenant_id;
+    
+    IF v_base_currency IS NULL THEN
+        v_base_currency := 'BRL'; -- default
+    END IF;
+    
+    -- Usa effective_date do período do demand ou do plan
+    v_effective_date := COALESCE(v_demand.period_start, v_demand.plan_period_start, CURRENT_DATE);
+    
+    -- Obtém parâmetro de custo do Core Economics Engine
+    v_cost_parameter := core.get_cost_parameter_for_context(
+        v_tenant_id,
+        v_demand.job_id,
+        v_demand.job_level_id,
+        v_effective_date
+    );
+    
+    IF v_cost_parameter IS NULL THEN
+        RAISE EXCEPTION 'Parâmetro de custo não encontrado para job_id=%, job_level_id=%, effective_date=%', 
+            v_demand.job_id, v_demand.job_level_id, v_effective_date;
+    END IF;
+    
+    -- Calcula custo total (headcount × cost_parameter)
+    -- Assumindo que cost_parameter já vem na moeda correta do Core
+    -- Se necessário, o Core pode retornar currency também
+    v_calculated_cost_original := v_demand.headcount * v_cost_parameter;
+    v_calculated_cost_base := v_calculated_cost_original; -- Por padrão, assume mesma moeda
+    
+    -- Se o Core retornar currency diferente, converte
+    -- NOTA: Assumindo que get_cost_parameter_for_context retorna custo na base currency
+    -- Se retornar em outra moeda, seria necessário obter currency do Core e converter
+    -- Por enquanto, assume que já está na base currency
+    
+    -- Insere ou atualiza calculated cost
+    -- Verifica se já existe
+    SELECT id INTO v_calculated_cost_id
+    FROM strategy.staffing_calculated_costs
+    WHERE staffing_demand_id = p_staffing_demand_id AND tenant_id = v_tenant_id;
+    
+    IF v_calculated_cost_id IS NULL THEN
+        -- Insere novo
+        INSERT INTO strategy.staffing_calculated_costs (
+            tenant_id,
+            staffing_demand_id,
+            calculated_cost_base_currency,
+            calculated_cost_original_currency,
+            currency_code,
+            calculation_date
+        ) VALUES (
+            v_tenant_id,
+            p_staffing_demand_id,
+            v_calculated_cost_base,
+            v_calculated_cost_original,
+            v_base_currency,
+            NOW()
+        ) RETURNING id INTO v_calculated_cost_id;
+    ELSE
+        -- Atualiza existente
+        UPDATE strategy.staffing_calculated_costs SET
+            calculated_cost_base_currency = v_calculated_cost_base,
+            calculated_cost_original_currency = v_calculated_cost_original,
+            currency_code = v_base_currency,
+            calculation_date = NOW()
+        WHERE id = v_calculated_cost_id;
+    END IF;
+    
+    -- Publica evento
+    PERFORM foundation.publish_event(
+        'strategy.staffing_costs.calculated',
+        'staffing_calculated_cost',
+        v_calculated_cost_id,
+        jsonb_build_object(
+            'calculated_cost_id', v_calculated_cost_id,
+            'staffing_demand_id', p_staffing_demand_id,
+            'calculated_cost_base_currency', v_calculated_cost_base,
+            'headcount', v_demand.headcount,
+            'cost_parameter', v_cost_parameter
+        ),
+        '1.0'
+    );
+    
+    RETURN v_calculated_cost_id;
 END;
 $$;
 
-COMMENT ON FUNCTION strategy.calculate_staffing_costs IS 'Calcula custos de staffing usando economics do Core (BLOQUEADO até economics existir)';
+COMMENT ON FUNCTION strategy.calculate_staffing_costs IS 'Calcula custos de staffing usando Core Economics Engine (core.get_cost_parameter_for_context + core.convert_currency)';
 
 -- Submeter staffing para aprovação
 CREATE OR REPLACE FUNCTION strategy.submit_staffing_for_approval(

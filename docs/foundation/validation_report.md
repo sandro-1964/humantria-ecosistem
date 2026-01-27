@@ -262,3 +262,46 @@ contracts/foundation/
 ---
 
 **Status Final:** ✅ PRONTO PARA EXECUÇÃO VIA MCP
+
+---
+
+## 🖥️ UI FOUNDATION RUNTIME + PATCHES — V1 (2026-01-27)
+
+### ✅ Contratos UI (fonte canônica local)
+- [x] `contracts/ui/ui_contract.md`
+- [x] `contracts/ui/routing_contract.md`
+- [x] `contracts/ui/states_contract.md`
+- [x] `contracts/ui/responsive_contract.md`
+
+### ✅ Runtime governado (sem tela em branco)
+- [x] Boot com `AppReadyGate` (auth/tenant) + estados `loading/error`
+- [x] Providers: Auth/Tenant/RBAC/Flags/Brand (best-effort, determinísticos)
+- [x] Normalização: `toText()` para impedir render de objeto/array
+
+### ✅ DIAG (permanente)
+- [x] `/__diag`
+- [x] `/__diag/meta` (fingerprint + status dos providers)
+
+### ✅ Rotas + Guards (RBAC)
+- [x] `/foundation/tenants*` restrito a `platform_owner`
+- [x] `/foundation/admin/*` restrito a `tenant_admin`
+- [x] `/foundation/audit` restrito a `platform_owner|tenant_admin|auditor`
+- [x] `/tools/*` no menu global; legacy integrations restrito a `platform_owner|tenant_admin`
+
+### ✅ Páginas Foundation (mínimo operável)
+- [x] Home (`/foundation`)
+- [x] Tenants list/detail (POC)
+- [x] Tenant settings (admin; com incident log best-effort)
+- [x] Users & Roles (list)
+- [x] Audit timeline (audit_log_functional)
+- [x] Wizard mínimo (UI guided)
+
+### ✅ i18n base
+- [x] `pt-BR` default + `en-US`
+- [x] seletor no shell (persistência em localStorage)
+
+### Evidências técnicas (o que validar)
+- Acesso a `/__diag/meta` renderiza JSON como texto (sem render de objetos crus).
+- Rotas protegidas exibem `AccessDeniedState` (não crash, não blank).
+- Sem `.env` com Supabase: UI mostra `ErrorState` orientando configuração.
+- Como `platform_owner` sem `tenant_id` no JWT: UI ainda sobe (modo soberano) e permite acessar `/foundation/tenants`.

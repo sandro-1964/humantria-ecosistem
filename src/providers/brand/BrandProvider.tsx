@@ -14,7 +14,7 @@ const BrandContext = createContext<Brand | null>(null)
 
 export function BrandProvider({ children }: { children: ReactNode }) {
   const tenant = useTenant()
-  const q = useTenantContextQuery({ enabled: tenant.status === 'ready', tenantId: tenant.tenantId })
+  const q = useTenantContextQuery({ enabled: tenant.status === 'ready' && !!tenant.tenantId, tenantId: tenant.tenantId })
 
   const value = useMemo<Brand>(() => {
     const tenantName = tenant.tenantName

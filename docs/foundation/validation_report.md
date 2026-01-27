@@ -304,3 +304,4 @@ contracts/foundation/
 - Acesso a `/__diag/meta` renderiza JSON como texto (sem render de objetos crus).
 - Rotas protegidas exibem `AccessDeniedState` (não crash, não blank).
 - Sem `.env` com Supabase: UI mostra `ErrorState` orientando configuração.
+- Como `platform_owner` sem `tenant_id` no JWT: UI ainda sobe (modo soberano) e permite acessar `/foundation/tenants`.

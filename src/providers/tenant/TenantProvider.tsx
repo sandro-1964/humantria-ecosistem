@@ -64,6 +64,17 @@ export function TenantProvider({ children }: { children: ReactNode }) {
     }
 
     if (!tenantId) {
+      // Platform Owner Console: sovereign mode may be cross-tenant; allow runtime boot even without tenant_id claim.
+      if (role === 'platform_owner') {
+        return {
+          status: 'ready',
+          tenantId: null,
+          role,
+          email,
+          tenantName: null,
+          errorMessage: null,
+        }
+      }
       return {
         status: 'missing',
         tenantId: null,

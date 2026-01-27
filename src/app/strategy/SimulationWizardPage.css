@@ -1,0 +1,41 @@
+.simulation-wizard-page {
+  max-width: 1200px;
+}
+
+.wizard-progress {
+  display: flex;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-2xl);
+  padding-bottom: var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.wizard-step {
+  flex: 1;
+  padding: var(--spacing-sm);
+  text-align: center;
+  color: var(--text-tertiary);
+  border-bottom: 2px solid transparent;
+}
+
+.wizard-step.active {
+  color: var(--color-brand-primary);
+  border-bottom-color: var(--color-brand-primary);
+}
+
+.wizard-content {
+  min-height: 400px;
+}
+
+.wizard-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-lg);
+}
+
+.wizard-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+  justify-content: flex-end;
+  margin-top: var(--spacing-lg);
+}

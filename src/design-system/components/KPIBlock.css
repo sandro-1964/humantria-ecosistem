@@ -1,0 +1,51 @@
+.ds-kpi-block {
+  padding: calc(var(--spacing-lg) * var(--density-multiplier));
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-left: 4px solid;
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-sm);
+}
+
+.ds-kpi-block--neutral {
+  border-left-color: var(--color-neutral-500);
+}
+
+.ds-kpi-block--success {
+  border-left-color: var(--color-semantic-success);
+}
+
+.ds-kpi-block--warning {
+  border-left-color: var(--color-semantic-warning);
+}
+
+.ds-kpi-block--error {
+  border-left-color: var(--color-semantic-error);
+}
+
+.ds-kpi-block--info {
+  border-left-color: var(--color-semantic-info);
+}
+
+.ds-kpi-block-icon {
+  font-size: 24px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.ds-kpi-block-title {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.ds-kpi-block-value {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.ds-kpi-block-subtitle {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+}

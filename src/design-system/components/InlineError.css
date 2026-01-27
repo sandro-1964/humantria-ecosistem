@@ -1,0 +1,16 @@
+.ds-inline-error {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  padding: calc(var(--spacing-sm) * var(--density-multiplier));
+  font-size: var(--font-size-sm);
+  color: var(--color-semantic-error);
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid var(--color-semantic-error);
+  border-radius: var(--radius-md);
+}
+
+.ds-inline-error::before {
+  content: '⚠';
+  font-size: var(--font-size-base);
+}

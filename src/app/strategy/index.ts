@@ -1,0 +1,8 @@
+export { StrategyHome } from './StrategyHome'
+export { DashboardPage } from './DashboardPage'
+export { ObjectivesPage } from './ObjectivesPage'
+export { ApprovalsPage } from './ApprovalsPage'
+export { BudgetVersionsPage } from './BudgetVersionsPage'
+export { StaffingPlansPage } from './StaffingPlansPage'
+export { SimulationWizardPage } from './SimulationWizardPage'
+export { RiskAlertsPage } from './RiskAlertsPage'

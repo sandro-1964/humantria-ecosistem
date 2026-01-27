@@ -1,0 +1,8 @@
+.approvals-page {
+  max-width: 1400px;
+}
+
+.approvals-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+}

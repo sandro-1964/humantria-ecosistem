@@ -8,5 +8,8 @@
 export { tokens } from './tokens'
 export type { Tokens } from './tokens'
 
+// Components
+export * from './components'
+
 // CSS import (deve ser importado no root da aplicação)
 // import './theme.css'

@@ -1,0 +1,41 @@
+.ds-breadcrumb {
+  margin-bottom: var(--spacing-md);
+}
+
+.ds-breadcrumb-list {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  gap: var(--spacing-xs);
+}
+
+.ds-breadcrumb-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.ds-breadcrumb-link {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.ds-breadcrumb-link:hover {
+  color: var(--text-primary);
+}
+
+.ds-breadcrumb-current {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+.ds-breadcrumb-separator {
+  font-size: var(--font-size-sm);
+  color: var(--text-tertiary);
+}

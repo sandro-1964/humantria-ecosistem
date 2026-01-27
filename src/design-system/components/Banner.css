@@ -1,0 +1,56 @@
+.ds-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: calc(var(--spacing-md) * var(--density-multiplier));
+  border-radius: var(--radius-md);
+  border: 1px solid;
+}
+
+.ds-banner-content {
+  flex: 1;
+  font-size: var(--font-size-sm);
+}
+
+.ds-banner--success {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: var(--color-semantic-success);
+  color: var(--color-semantic-success);
+}
+
+.ds-banner--warning {
+  background: rgba(245, 158, 11, 0.1);
+  border-color: var(--color-semantic-warning);
+  color: var(--color-semantic-warning);
+}
+
+.ds-banner--error {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: var(--color-semantic-error);
+  color: var(--color-semantic-error);
+}
+
+.ds-banner--info {
+  background: rgba(59, 130, 246, 0.1);
+  border-color: var(--color-semantic-info);
+  color: var(--color-semantic-info);
+}
+
+.ds-banner-close {
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  font-size: var(--font-size-lg);
+  line-height: 1;
+  color: inherit;
+  background: transparent;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+
+.ds-banner-close:hover {
+  opacity: 1;
+}

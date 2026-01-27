@@ -1,0 +1,45 @@
+.ds-tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.ds-tooltip {
+  position: absolute;
+  z-index: var(--z-tooltip);
+  padding: calc(var(--spacing-xs) * var(--density-multiplier)) calc(var(--spacing-sm) * var(--density-multiplier));
+  font-size: var(--font-size-xs);
+  color: var(--text-inverse);
+  background: var(--color-neutral-900);
+  border-radius: var(--radius-md);
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: var(--shadow-lg);
+}
+
+.ds-tooltip--top {
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-bottom: var(--spacing-xs);
+}
+
+.ds-tooltip--bottom {
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: var(--spacing-xs);
+}
+
+.ds-tooltip--left {
+  right: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-right: var(--spacing-xs);
+}
+
+.ds-tooltip--right {
+  left: 100%;
+  top: 50%;
+  transform: translateY(-50%);
+  margin-left: var(--spacing-xs);
+}

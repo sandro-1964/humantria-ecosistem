@@ -1,0 +1,8 @@
+.budget-versions-page {
+  max-width: 1400px;
+}
+
+.budget-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+}

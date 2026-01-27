@@ -1,0 +1,17 @@
+.sessions-page {
+  max-width: 1200px;
+}
+
+.sessions-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.sessions-current-badge {
+  padding: var(--spacing-xs) var(--spacing-sm);
+  font-size: var(--font-size-xs);
+  background: var(--color-semantic-success);
+  color: var(--text-inverse);
+  border-radius: var(--radius-full);
+}

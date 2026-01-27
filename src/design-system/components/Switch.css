@@ -1,0 +1,54 @@
+.ds-switch-wrapper {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.ds-switch {
+  position: relative;
+  width: 44px;
+  height: 24px;
+  appearance: none;
+  background: var(--border-color);
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.ds-switch::before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--bg-primary);
+  top: 2px;
+  left: 2px;
+  transition: transform 0.2s;
+  box-shadow: var(--shadow-sm);
+}
+
+.ds-switch:checked {
+  background: var(--color-brand-primary);
+}
+
+.ds-switch:checked::before {
+  transform: translateX(20px);
+}
+
+.ds-switch:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ds-switch-label {
+  font-size: var(--font-size-base);
+  color: var(--text-primary);
+  cursor: pointer;
+  user-select: none;
+}
+
+.ds-switch:disabled + .ds-switch-label {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

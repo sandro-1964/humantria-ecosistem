@@ -1,0 +1,47 @@
+.ds-stats-card {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-md);
+  padding: calc(var(--spacing-lg) * var(--density-multiplier));
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+}
+
+.ds-stats-card-icon {
+  font-size: 24px;
+  color: var(--color-brand-primary);
+  flex-shrink: 0;
+}
+
+.ds-stats-card-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.ds-stats-card-label {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.ds-stats-card-value {
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-bold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.ds-stats-card-trend {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+}
+
+.ds-stats-card-trend--positive {
+  color: var(--color-semantic-success);
+}
+
+.ds-stats-card-trend--negative {
+  color: var(--color-semantic-error);
+}

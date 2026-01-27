@@ -1,0 +1,8 @@
+.objectives-page {
+  max-width: 1400px;
+}
+
+.objectives-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+}

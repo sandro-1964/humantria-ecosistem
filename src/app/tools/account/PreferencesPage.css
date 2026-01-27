@@ -1,0 +1,19 @@
+.preferences-page {
+  max-width: 1200px;
+}
+
+.preferences-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: var(--spacing-lg);
+  margin-bottom: var(--spacing-lg);
+}
+
+.preferences-section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.preferences-actions {
+  display: flex;
+  gap: var(--spacing-sm);
+}

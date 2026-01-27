@@ -1,0 +1,25 @@
+.strategy-home {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.strategy-home-header {
+  margin-bottom: var(--spacing-2xl);
+}
+
+.strategy-home-header h1 {
+  font-size: var(--font-size-3xl);
+  font-weight: var(--font-weight-bold);
+  margin-bottom: var(--spacing-sm);
+}
+
+.strategy-home-header p {
+  font-size: var(--font-size-lg);
+  color: var(--text-secondary);
+}
+
+.strategy-home-content {
+  padding: var(--spacing-lg);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-lg);
+}

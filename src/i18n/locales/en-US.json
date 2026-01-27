@@ -1,0 +1,38 @@
+{
+  "app": {
+    "title": "HUMANTRÍA"
+  },
+  "nav": {
+    "diag": "DIAG",
+    "foundation": "Foundation",
+    "tools": "Tools",
+    "tenants": "Tenants",
+    "settings": "Settings",
+    "usersRoles": "Users & Roles",
+    "audit": "Audit Timeline",
+    "wizard": "Wizard",
+    "docs": "Documentation",
+    "legacy": "Legacy Integrations"
+  },
+  "states": {
+    "loadingTitle": "Loading",
+    "loadingBody": "Preparing the environment.",
+    "emptyTitle": "Nothing to show",
+    "emptyBody": "Not enough data yet. Check permissions, tenant, and seeds.",
+    "errorTitle": "Something went wrong",
+    "errorBody": "We couldn't complete the operation. Open DIAG to troubleshoot."
+  },
+  "auth": {
+    "title": "Access",
+    "email": "Email",
+    "password": "Password",
+    "signIn": "Sign in",
+    "signOut": "Sign out"
+  },
+  "diag": {
+    "title": "DIAG",
+    "meta": "Meta",
+    "openMeta": "Open /__diag/meta"
+  }
+}
+

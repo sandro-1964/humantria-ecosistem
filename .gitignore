@@ -24,3 +24,7 @@ dist-ssr
 *.sw?
 
 .env
+
+# MCP execution artifacts - nunca versionar arquivos fragmentados
+contracts/strategy/*_part*.sql
+contracts/strategy/*_fixed*.sql

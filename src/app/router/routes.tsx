@@ -12,7 +12,7 @@ import { TenantBootstrapWizardPage } from '../pages/foundation/wizard/TenantBoot
 import { ToolsDocsPage } from '../pages/tools/ToolsDocsPage'
 import { ToolsLegacyIntegrationsPage } from '../pages/tools/ToolsLegacyIntegrationsPage'
 import { AppShell } from '../../shell/AppShell'
-import { RequireAuth, RequireTenant } from './guards'
+import { RequireAuth, RequireRole, RequireTenant } from './guards'
 
 export function createAppRouter() {
   return createBrowserRouter([
@@ -32,15 +32,64 @@ export function createAppRouter() {
       ),
       children: [
         { path: '/foundation', element: <FoundationHomePage /> },
-        { path: '/foundation/tenants', element: <TenantsListPage /> },
-        { path: '/foundation/tenants/:tenantId', element: <TenantDetailPage /> },
-        { path: '/foundation/admin/settings', element: <TenantSettingsPage /> },
-        { path: '/foundation/admin/users-roles', element: <UsersAndRolesPage /> },
-        { path: '/foundation/audit', element: <AuditTimelinePage /> },
-        { path: '/foundation/wizard/bootstrap', element: <TenantBootstrapWizardPage /> },
+        {
+          path: '/foundation/tenants',
+          element: (
+            <RequireRole roles={['platform_owner']}>
+              <TenantsListPage />
+            </RequireRole>
+          ),
+        },
+        {
+          path: '/foundation/tenants/:tenantId',
+          element: (
+            <RequireRole roles={['platform_owner']}>
+              <TenantDetailPage />
+            </RequireRole>
+          ),
+        },
+        {
+          path: '/foundation/admin/settings',
+          element: (
+            <RequireRole roles={['tenant_admin']}>
+              <TenantSettingsPage />
+            </RequireRole>
+          ),
+        },
+        {
+          path: '/foundation/admin/users-roles',
+          element: (
+            <RequireRole roles={['tenant_admin']}>
+              <UsersAndRolesPage />
+            </RequireRole>
+          ),
+        },
+        {
+          path: '/foundation/audit',
+          element: (
+            <RequireRole roles={['platform_owner', 'tenant_admin', 'auditor']}>
+              <AuditTimelinePage />
+            </RequireRole>
+          ),
+        },
+        {
+          path: '/foundation/wizard/bootstrap',
+          element: (
+            <RequireRole roles={['tenant_admin']}>
+              <TenantBootstrapWizardPage />
+            </RequireRole>
+          ),
+        },
 
         { path: '/tools/docs', element: <ToolsDocsPage /> },
-        { path: '/tools/legacy-integrations', element: <ToolsLegacyIntegrationsPage /> }
+        {
+          path: '/tools/legacy-integrations',
+          element: (
+            <RequireRole roles={['platform_owner', 'tenant_admin']}>
+              <ToolsLegacyIntegrationsPage />
+            </RequireRole>
+          ),
+        },
       ],
     },
   ])

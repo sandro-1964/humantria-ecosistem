@@ -20,7 +20,10 @@
     "emptyTitle": "Nada para mostrar",
     "emptyBody": "Não há dados suficientes ainda. Verifique permissões, tenant e seeds.",
     "errorTitle": "Algo deu errado",
-    "errorBody": "Não foi possível completar a operação. Abra o DIAG para diagnosticar."
+    "errorBody": "Não foi possível completar a operação. Abra o DIAG para diagnosticar.",
+    "accessDeniedTitle": "Acesso negado",
+    "accessDeniedBody": "Você não tem permissão para acessar esta área.",
+    "openDiag": "Abrir DIAG"
   },
   "auth": {
     "title": "Acesso",

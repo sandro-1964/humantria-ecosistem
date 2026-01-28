@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import { setLocale, getLocale } from '../i18n'
 import { useBrand } from '../providers/brand/BrandProvider'
-import { useRbac } from '../providers/rbac/RbacProvider'
 import { toText } from '../lib/to-text'
+import { MenuGate } from '../components/guards/MenuGate'
 
 function MenuItem({ to, label }: { to: string; label: string }) {
   return (
@@ -30,13 +30,8 @@ function MenuItem({ to, label }: { to: string; label: string }) {
 export function AppShell() {
   const { t } = useTranslation()
   const brand = useBrand()
-  const rbac = useRbac()
 
   const locale = getLocale()
-
-  const canSeePoc = rbac.role === 'platform_owner'
-  const canSeeTenantAdmin = rbac.role === 'tenant_admin'
-  const canSeeAudit = rbac.role === 'platform_owner' || rbac.role === 'tenant_admin' || rbac.role === 'auditor'
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '260px 1fr', minHeight: '100vh' }}>
@@ -68,15 +63,31 @@ export function AppShell() {
           <div style={{ marginTop: 10, fontSize: 12, opacity: 0.7 }}>{toText(t('nav.foundation'))}</div>
           <MenuItem to="/foundation" label={t('nav.foundation')} />
 
-          {canSeePoc ? <MenuItem to="/foundation/tenants" label={t('nav.tenants')} /> : null}
-          {canSeeTenantAdmin ? <MenuItem to="/foundation/admin/settings" label={t('nav.settings')} /> : null}
-          {canSeeTenantAdmin ? <MenuItem to="/foundation/admin/users-roles" label={t('nav.usersRoles')} /> : null}
-          {canSeeAudit ? <MenuItem to="/foundation/audit" label={t('nav.audit')} /> : null}
-          {canSeeTenantAdmin ? <MenuItem to="/foundation/wizard/bootstrap" label={t('nav.wizard')} /> : null}
+          <MenuGate allowRoles={['platform_owner']}>
+            <MenuItem to="/foundation/tenants" label={t('nav.tenants')} />
+          </MenuGate>
+
+          <MenuGate allowRoles={['platform_owner', 'tenant_admin']}>
+            <MenuItem to="/foundation/admin/settings" label={t('nav.settings')} />
+          </MenuGate>
+
+          <MenuGate allowRoles={['platform_owner', 'tenant_admin']}>
+            <MenuItem to="/foundation/admin/users-roles" label={t('nav.usersRoles')} />
+          </MenuGate>
+
+          <MenuGate allowRoles={['platform_owner', 'tenant_admin', 'auditor']}>
+            <MenuItem to="/foundation/audit" label={t('nav.audit')} />
+          </MenuGate>
+
+          <MenuGate allowRoles={['platform_owner', 'tenant_admin']}>
+            <MenuItem to="/foundation/wizard/bootstrap" label={t('nav.wizard')} />
+          </MenuGate>
 
           <div style={{ marginTop: 10, fontSize: 12, opacity: 0.7 }}>{toText(t('nav.tools'))}</div>
           <MenuItem to="/tools/docs" label={t('nav.docs')} />
-          <MenuItem to="/tools/legacy-integrations" label={t('nav.legacy')} />
+          <MenuGate allowRoles={['platform_owner', 'tenant_admin']}>
+            <MenuItem to="/tools/legacy-integrations" label={t('nav.legacy')} />
+          </MenuGate>
         </nav>
       </aside>
 

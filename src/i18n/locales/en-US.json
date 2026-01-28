@@ -20,7 +20,10 @@
     "emptyTitle": "Nothing to show",
     "emptyBody": "Not enough data yet. Check permissions, tenant, and seeds.",
     "errorTitle": "Something went wrong",
-    "errorBody": "We couldn't complete the operation. Open DIAG to troubleshoot."
+    "errorBody": "We couldn't complete the operation. Open DIAG to troubleshoot.",
+    "accessDeniedTitle": "Access denied",
+    "accessDeniedBody": "You don't have permission to access this area.",
+    "openDiag": "Open DIAG"
   },
   "auth": {
     "title": "Access",

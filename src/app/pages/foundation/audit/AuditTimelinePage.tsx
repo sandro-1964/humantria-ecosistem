@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-import { LoadingState, EmptyState, ErrorState } from '../../../../providers/app/states'
+import { LoadingState, EmptyState, ErrorState } from '../../../../components/states'
 import { useTenant } from '../../../../providers/tenant/TenantProvider'
 import { getSupabaseClient } from '../../../../services/supabase/client'
 import { toText } from '../../../../lib/to-text'
@@ -35,11 +35,28 @@ export function AuditTimelinePage() {
     },
   })
 
-  if (q.isLoading) return <LoadingState />
-  if (q.isError) return <ErrorState details={q.error instanceof Error ? q.error.message : 'audit_error'} />
+  if (q.isLoading) return <LoadingState testid="state-loading-audit" />
+  if (q.isError)
+    return (
+      <ErrorState
+        testid="state-error-audit"
+        actions={
+          <pre style={{ whiteSpace: 'pre-wrap', fontSize: 12, opacity: 0.85 }}>
+            {toText(q.error instanceof Error ? q.error.message : 'audit_error')}
+          </pre>
+        }
+      />
+    )
 
   const rows = q.data ?? []
-  if (rows.length === 0) return <EmptyState title="No audit entries" body="Nenhuma entrada de audit_log_functional encontrada para este tenant." />
+  if (rows.length === 0)
+    return (
+      <EmptyState
+        testid="state-empty-audit"
+        title="No audit entries"
+        message="Nenhuma entrada encontrada para este tenant."
+      />
+    )
 
   return (
     <div>

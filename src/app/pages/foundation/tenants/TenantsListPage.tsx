@@ -1,7 +1,7 @@
 import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 
-import { LoadingState, EmptyState, ErrorState } from '../../../../providers/app/states'
+import { LoadingState, EmptyState, ErrorState } from '../../../../components/states'
 import { getSupabaseClient } from '../../../../services/supabase/client'
 import { toText } from '../../../../lib/to-text'
 
@@ -18,11 +18,21 @@ export function TenantsListPage() {
     },
   })
 
-  if (q.isLoading) return <LoadingState />
-  if (q.isError) return <ErrorState details={q.error instanceof Error ? q.error.message : 'tenants_error'} />
+  if (q.isLoading) return <LoadingState testid="state-loading-tenants" />
+  if (q.isError)
+    return (
+      <ErrorState
+        testid="state-error-tenants"
+        actions={
+          <pre style={{ whiteSpace: 'pre-wrap', fontSize: 12, opacity: 0.85 }}>
+            {toText(q.error instanceof Error ? q.error.message : 'tenants_error')}
+          </pre>
+        }
+      />
+    )
 
   const rows = q.data ?? []
-  if (rows.length === 0) return <EmptyState />
+  if (rows.length === 0) return <EmptyState testid="state-empty-tenants" />
 
   return (
     <div>

@@ -3,6 +3,8 @@ import { createContext, useContext, useMemo } from 'react'
 
 import { useTenant } from '../tenant/TenantProvider'
 import { useRbacQuery } from '../../hooks/use-rbac'
+import { getDemoSession } from '../../services/demo/demo-session'
+import type { DemoRole } from '../../services/demo/demo-session'
 
 export type RbacStatus = 'loading' | 'ready' | 'error'
 
@@ -13,18 +15,35 @@ export type RbacState = {
   errorMessage: string | null
 }
 
+/** DEMO MODE: hardcoded permissions per role (no Supabase). */
+const DEMO_PERMISSIONS: Record<DemoRole, string[]> = {
+  admin: ['*'],
+  manager: ['foundation:read', 'audit:read', 'docs:read'],
+  analyst: ['foundation:read', 'audit:read', 'docs:read'],
+  auditor: ['audit:read', 'docs:read', 'compliance:read'],
+}
+
 const RbacContext = createContext<RbacState | null>(null)
 
 export function RbacProvider({ children }: { children: ReactNode }) {
   const tenant = useTenant()
+  const demo = getDemoSession()
   const q = useRbacQuery({
-    enabled: tenant.status === 'ready',
+    enabled: tenant.status === 'ready' && !demo?.enabled,
     tenantId: tenant.tenantId,
     roleFromJwt: tenant.role,
     userEmail: tenant.email,
   })
 
   const value = useMemo<RbacState>(() => {
+    if (demo?.enabled && demo.role) {
+      return {
+        status: 'ready',
+        role: demo.role,
+        permissions: DEMO_PERMISSIONS[demo.role] ?? [],
+        errorMessage: null,
+      }
+    }
     if (q.isLoading) {
       return { status: 'loading', role: tenant.role, permissions: [], errorMessage: null }
     }
@@ -42,7 +61,7 @@ export function RbacProvider({ children }: { children: ReactNode }) {
       permissions: q.data?.permissions ?? [],
       errorMessage: null,
     }
-  }, [q.data?.permissions, q.data?.role, q.error, q.isError, q.isLoading, tenant.role])
+  }, [demo, q.data?.permissions, q.data?.role, q.error, q.isError, q.isLoading, tenant.role])
 
   return <RbacContext.Provider value={value}>{children}</RbacContext.Provider>
 }

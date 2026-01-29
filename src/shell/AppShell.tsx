@@ -3,8 +3,24 @@ import { useTranslation } from 'react-i18next'
 
 import { setLocale, getLocale } from '../i18n'
 import { useBrand } from '../providers/brand/BrandProvider'
+import { useTenant } from '../providers/tenant/TenantProvider'
+import { useRbac } from '../providers/rbac/RbacProvider'
 import { toText } from '../lib/to-text'
 import { MenuGate } from '../components/guards/MenuGate'
+import {
+  getDemoSession,
+  setDemoSession,
+  clearDemoSession,
+  createDemoSession,
+  type DemoRole,
+} from '../services/demo/demo-session'
+
+const DEMO_ROLES: { value: DemoRole; label: string }[] = [
+  { value: 'admin', label: 'Admin' },
+  { value: 'manager', label: 'Gestor' },
+  { value: 'analyst', label: 'Analista' },
+  { value: 'auditor', label: 'Auditor' },
+]
 
 function MenuItem({ to, label }: { to: string; label: string }) {
   return (
@@ -30,6 +46,9 @@ function MenuItem({ to, label }: { to: string; label: string }) {
 export function AppShell() {
   const { t } = useTranslation()
   const brand = useBrand()
+  const tenant = useTenant()
+  const rbac = useRbac()
+  const demo = getDemoSession()
 
   const locale = getLocale()
 
@@ -38,10 +57,63 @@ export function AppShell() {
       <aside style={{ padding: 16, borderRight: '1px solid rgba(0,0,0,0.08)' }}>
         <div style={{ marginBottom: 16 }}>
           <div style={{ fontSize: 12, opacity: 0.7 }}>{toText(t('app.title'))}</div>
-          <div style={{ fontSize: 16, fontWeight: 700 }}>
+          <div style={{ fontSize: 16, fontWeight: 700, display: 'flex', alignItems: 'center', gap: 8 }}>
             {toText(brand.tenantName ?? t('nav.foundation'))}
+            {demo?.enabled ? (
+              <span
+                style={{
+                  fontSize: 10,
+                  padding: '2px 6px',
+                  borderRadius: 4,
+                  background: '#e0f2fe',
+                  color: '#0369a1',
+                  fontWeight: 600,
+                }}
+              >
+                DEMO
+              </span>
+            ) : null}
           </div>
         </div>
+
+        {demo?.enabled ? (
+          <div style={{ marginBottom: 16, padding: 10, background: 'rgba(0,0,0,0.04)', borderRadius: 8 }}>
+            <div style={{ fontSize: 11, fontWeight: 600, opacity: 0.8, marginBottom: 6 }}>
+              Simulação de Perfil (DEMO)
+            </div>
+            <select
+              value={demo.role}
+              onChange={(e) => {
+                const role = e.target.value as DemoRole
+                if (['admin', 'manager', 'analyst', 'auditor'].includes(role)) {
+                  setDemoSession(createDemoSession(role))
+                }
+              }}
+              style={{ width: '100%', padding: 6, borderRadius: 6, fontSize: 12 }}
+            >
+              {DEMO_ROLES.map((r) => (
+                <option key={r.value} value={r.value}>
+                  {r.label}
+                </option>
+              ))}
+            </select>
+            <button
+              type="button"
+              onClick={() => clearDemoSession()}
+              style={{
+                marginTop: 6,
+                width: '100%',
+                padding: 6,
+                fontSize: 11,
+                borderRadius: 6,
+                background: 'transparent',
+                border: '1px solid rgba(0,0,0,0.2)',
+              }}
+            >
+              Sair do DEMO
+            </button>
+          </div>
+        ) : null}
 
         <div style={{ marginBottom: 16 }}>
           <label style={{ fontSize: 12, opacity: 0.7 }}>Language</label>
@@ -63,36 +135,51 @@ export function AppShell() {
           <div style={{ marginTop: 10, fontSize: 12, opacity: 0.7 }}>{toText(t('nav.foundation'))}</div>
           <MenuItem to="/foundation" label={t('nav.foundation')} />
 
-          <MenuGate allowRoles={['platform_owner']}>
+          <MenuGate allowRoles={['platform_owner', 'admin']}>
             <MenuItem to="/foundation/tenants" label={t('nav.tenants')} />
           </MenuGate>
 
-          <MenuGate allowRoles={['platform_owner', 'tenant_admin']}>
+          <MenuGate allowRoles={['platform_owner', 'tenant_admin', 'admin']}>
             <MenuItem to="/foundation/admin/settings" label={t('nav.settings')} />
           </MenuGate>
 
-          <MenuGate allowRoles={['platform_owner', 'tenant_admin']}>
+          <MenuGate allowRoles={['platform_owner', 'tenant_admin', 'admin']}>
             <MenuItem to="/foundation/admin/users-roles" label={t('nav.usersRoles')} />
           </MenuGate>
 
-          <MenuGate allowRoles={['platform_owner', 'tenant_admin', 'auditor']}>
+          <MenuGate allowRoles={['platform_owner', 'tenant_admin', 'auditor', 'admin', 'manager', 'analyst', 'auditor']}>
             <MenuItem to="/foundation/audit" label={t('nav.audit')} />
           </MenuGate>
 
-          <MenuGate allowRoles={['platform_owner', 'tenant_admin']}>
+          <MenuGate allowRoles={['platform_owner', 'tenant_admin', 'admin']}>
             <MenuItem to="/foundation/wizard/bootstrap" label={t('nav.wizard')} />
           </MenuGate>
 
           <div style={{ marginTop: 10, fontSize: 12, opacity: 0.7 }}>{toText(t('nav.tools'))}</div>
           <MenuItem to="/tools/docs" label={t('nav.docs')} />
-          <MenuGate allowRoles={['platform_owner', 'tenant_admin']}>
+          <MenuGate allowRoles={['platform_owner', 'tenant_admin', 'admin']}>
             <MenuItem to="/tools/legacy-integrations" label={t('nav.legacy')} />
           </MenuGate>
         </nav>
       </aside>
 
-      <main style={{ padding: 20 }}>
-        <Outlet />
+      <main style={{ padding: 20, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        <div style={{ flex: 1 }}>
+          <Outlet />
+        </div>
+        {demo?.enabled ? (
+          <footer
+            style={{
+              marginTop: 16,
+              paddingTop: 8,
+              borderTop: '1px solid rgba(0,0,0,0.06)',
+              fontSize: 11,
+              opacity: 0.7,
+            }}
+          >
+            DEMO • {toText(rbac.role ?? '—')} • {toText(tenant.tenantName ?? '—')}
+          </footer>
+        ) : null}
       </main>
     </div>
   )

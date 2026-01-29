@@ -35,7 +35,7 @@ export function createAppRouter() {
         {
           path: '/foundation/tenants',
           element: (
-            <RequireRole roles={['platform_owner']}>
+            <RequireRole roles={['platform_owner', 'admin']}>
               <TenantsListPage />
             </RequireRole>
           ),
@@ -43,7 +43,7 @@ export function createAppRouter() {
         {
           path: '/foundation/tenants/:tenantId',
           element: (
-            <RequireRole roles={['platform_owner']}>
+            <RequireRole roles={['platform_owner', 'admin']}>
               <TenantDetailPage />
             </RequireRole>
           ),
@@ -51,7 +51,7 @@ export function createAppRouter() {
         {
           path: '/foundation/admin/settings',
           element: (
-            <RequireRole roles={['tenant_admin']}>
+            <RequireRole roles={['tenant_admin', 'admin']}>
               <TenantSettingsPage />
             </RequireRole>
           ),
@@ -59,7 +59,7 @@ export function createAppRouter() {
         {
           path: '/foundation/admin/users-roles',
           element: (
-            <RequireRole roles={['tenant_admin']}>
+            <RequireRole roles={['tenant_admin', 'admin']}>
               <UsersAndRolesPage />
             </RequireRole>
           ),
@@ -67,7 +67,7 @@ export function createAppRouter() {
         {
           path: '/foundation/audit',
           element: (
-            <RequireRole roles={['platform_owner', 'tenant_admin', 'auditor']}>
+            <RequireRole roles={['platform_owner', 'tenant_admin', 'auditor', 'admin', 'manager', 'analyst', 'auditor']}>
               <AuditTimelinePage />
             </RequireRole>
           ),
@@ -75,7 +75,7 @@ export function createAppRouter() {
         {
           path: '/foundation/wizard/bootstrap',
           element: (
-            <RequireRole roles={['tenant_admin']}>
+            <RequireRole roles={['tenant_admin', 'admin']}>
               <TenantBootstrapWizardPage />
             </RequireRole>
           ),
@@ -85,7 +85,7 @@ export function createAppRouter() {
         {
           path: '/tools/legacy-integrations',
           element: (
-            <RequireRole roles={['platform_owner', 'tenant_admin']}>
+            <RequireRole roles={['platform_owner', 'tenant_admin', 'admin']}>
               <ToolsLegacyIntegrationsPage />
             </RequireRole>
           ),

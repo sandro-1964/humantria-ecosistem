@@ -1,9 +1,10 @@
 import type { ReactNode } from 'react'
-import { createContext, useContext, useMemo } from 'react'
+import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
 import { useAuth } from '../auth/AuthProvider'
 import { decodeJwtClaims } from '../../services/supabase/jwt'
 import { useTenantContextQuery } from '../../hooks/use-tenant-context'
+import { getDemoSession, DEMO_SESSION_CHANGE_EVENT } from '../../services/demo/demo-session'
 
 export type TenantStatus = 'loading' | 'ready' | 'missing' | 'error'
 
@@ -20,16 +21,41 @@ const TenantContext = createContext<TenantContextState | null>(null)
 
 export function TenantProvider({ children }: { children: ReactNode }) {
   const auth = useAuth()
+  const [demoSession, setDemoSession] = useState(getDemoSession())
+
+  useEffect(() => {
+    const onDemoChange = () => setDemoSession(getDemoSession())
+    window.addEventListener(DEMO_SESSION_CHANGE_EVENT, onDemoChange)
+    return () => window.removeEventListener(DEMO_SESSION_CHANGE_EVENT, onDemoChange)
+  }, [])
 
   const claims = useMemo(() => decodeJwtClaims(auth.session?.access_token), [auth.session])
 
-  const tenantId = (claims?.tenant_id as string | undefined) ?? null
-  const role = (claims?.role as string | undefined) ?? null
-  const email = (claims?.email as string | undefined) ?? auth.user?.email ?? null
+  const tenantIdFromAuth = (claims?.tenant_id as string | undefined) ?? null
+  const roleFromAuth = (claims?.role as string | undefined) ?? null
+  const emailFromAuth = (claims?.email as string | undefined) ?? auth.user?.email ?? null
 
-  const q = useTenantContextQuery({ enabled: auth.status === 'authenticated' && !!tenantId, tenantId })
+  const tenantId = demoSession?.enabled ? demoSession.tenantId : tenantIdFromAuth
+  const role = demoSession?.enabled ? demoSession.role : roleFromAuth
+  const email = demoSession?.enabled ? demoSession.userEmail : emailFromAuth
+
+  const q = useTenantContextQuery({
+    enabled: auth.status === 'authenticated' && !!tenantId && !demoSession?.enabled,
+    tenantId: demoSession?.enabled ? null : tenantId,
+  })
 
   const value = useMemo<TenantContextState>(() => {
+    if (demoSession?.enabled) {
+      return {
+        status: 'ready' as const,
+        tenantId: demoSession.tenantId,
+        role: demoSession.role,
+        email: demoSession.userEmail,
+        tenantName: demoSession.tenantName,
+        errorMessage: null,
+      }
+    }
+
     if (auth.status === 'loading') {
       return {
         status: 'loading',
@@ -64,7 +90,6 @@ export function TenantProvider({ children }: { children: ReactNode }) {
     }
 
     if (!tenantId) {
-      // Platform Owner Console: sovereign mode may be cross-tenant; allow runtime boot even without tenant_id claim.
       if (role === 'platform_owner') {
         return {
           status: 'ready',
@@ -119,6 +144,7 @@ export function TenantProvider({ children }: { children: ReactNode }) {
   }, [
     auth.errorMessage,
     auth.status,
+    demoSession,
     email,
     q.data,
     q.error,

@@ -3,6 +3,7 @@ import { createContext, useContext, useMemo } from 'react'
 
 import { useTenant } from '../tenant/TenantProvider'
 import { useTenantContextQuery } from '../../hooks/use-tenant-context'
+import { getDemoSession } from '../../services/demo/demo-session'
 
 export type Brand = {
   tenantName: string | null
@@ -14,7 +15,11 @@ const BrandContext = createContext<Brand | null>(null)
 
 export function BrandProvider({ children }: { children: ReactNode }) {
   const tenant = useTenant()
-  const q = useTenantContextQuery({ enabled: tenant.status === 'ready' && !!tenant.tenantId, tenantId: tenant.tenantId })
+  const demo = getDemoSession()
+  const q = useTenantContextQuery({
+    enabled: tenant.status === 'ready' && !!tenant.tenantId && !demo?.enabled,
+    tenantId: tenant.tenantId,
+  })
 
   const value = useMemo<Brand>(() => {
     const tenantName = tenant.tenantName

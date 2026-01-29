@@ -4,6 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { ErrorState, LoadingState } from '../../../providers/app/states'
 import { toText } from '../../../lib/to-text'
 import { getSupabaseClient } from '../../../services/supabase/client'
+import { startDemoWithRole, type DemoRole } from '../../../services/demo/demo-session'
+
+const DEMO_ROLES: { value: DemoRole; label: string }[] = [
+  { value: 'admin', label: 'Admin' },
+  { value: 'manager', label: 'Gestor' },
+  { value: 'analyst', label: 'Analista' },
+  { value: 'auditor', label: 'Auditor' },
+]
 
 export function AuthPage() {
   const { t } = useTranslation()
@@ -25,6 +33,10 @@ export function AuthPage() {
       setStatus('error')
       setError(e instanceof Error ? e.message : 'auth_error')
     }
+  }
+
+  function enterDemo(role: DemoRole = 'admin') {
+    startDemoWithRole(role)
   }
 
   if (status === 'loading') return <LoadingState title="Signing in" body="Authenticating with Supabase…" />
@@ -62,6 +74,40 @@ export function AuthPage() {
       </div>
 
       {status === 'error' ? <ErrorState title="Sign-in failed" details={error ?? undefined} /> : null}
+
+      <div style={{ marginTop: 24, paddingTop: 24, borderTop: '1px solid rgba(0,0,0,0.1)' }}>
+        <div style={{ fontSize: 12, opacity: 0.8, marginBottom: 8 }}>DEMO MODE (sem Supabase)</div>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 8, alignItems: 'center' }}>
+          <button
+            type="button"
+            onClick={() => enterDemo('admin')}
+            style={{ padding: '8px 12px', borderRadius: 8, fontWeight: 600 }}
+          >
+            Entrar em DEMO
+          </button>
+          <span style={{ fontSize: 12, opacity: 0.7 }}>ou</span>
+          <label style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 12 }}>Escolher perfil DEMO:</span>
+            <select
+              defaultValue=""
+              onChange={(e) => {
+                const v = e.target.value as DemoRole
+                if (v) enterDemo(v)
+              }}
+              style={{ padding: 6, borderRadius: 6 }}
+            >
+              <option value="" disabled>
+                —
+              </option>
+              {DEMO_ROLES.map((r) => (
+                <option key={r.value} value={r.value}>
+                  {r.label}
+                </option>
+              ))}
+            </select>
+          </label>
+        </div>
+      </div>
     </div>
   )
 }

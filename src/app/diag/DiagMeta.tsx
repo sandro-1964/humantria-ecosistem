@@ -4,6 +4,7 @@ import { useAuth } from '../../providers/auth/AuthProvider'
 import { useTenant } from '../../providers/tenant/TenantProvider'
 import { useRbac } from '../../providers/rbac/RbacProvider'
 import { useFlags } from '../../providers/flags/FlagsProvider'
+import { getDemoSession } from '../../services/demo/demo-session'
 import { toText } from '../../lib/to-text'
 
 export function DiagMeta() {
@@ -12,14 +13,22 @@ export function DiagMeta() {
   const tenant = useTenant()
   const rbac = useRbac()
   const flags = useFlags()
+  const demo = getDemoSession()
 
   const meta = {
     app: {
       version: import.meta.env.VITE_APP_VERSION ?? 'dev',
       mode: import.meta.env.MODE,
+      buildCommit: import.meta.env.VITE_BUILD_COMMIT ?? null,
     },
     route: {
       pathname: location.pathname,
+    },
+    demo: {
+      enabled: demo?.enabled ?? false,
+      role: demo?.role ?? null,
+      tenantId: demo?.tenantId ?? null,
+      userEmail: demo?.userEmail ?? null,
     },
     auth: {
       status: auth.status,

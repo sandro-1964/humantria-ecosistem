@@ -67,3 +67,28 @@
 
 - **Nenhuma policy foi alterada nesta execução; somente leitura + testes.**
 - **Seed apenas se GO explícito do comandante.**
+
+---
+
+## Fechamento canônico (safe mode)
+
+### Resumo executivo
+
+- T9 encerrado em modo seguro: **somente leitura + organização + evidências**. Nenhuma migration, SQL, DROP/CREATE, alteração de policies/RLS ou Supabase.
+- Repo: `.cursor/mcp.json` e `src/i18n/index.ts` restaurados; script de migrations movido para `docs/qa/evidence/` (histórico).
+
+### O que foi validado
+
+- **MCP:** query listar schemas — foundation, core, strategy, public presentes.
+- **Banco:** intacto (nenhuma alteração).
+- **Policies:** intactas (81 no foundation).
+- **test:int:** FAIL até expor schema `foundation` na API (Supabase Dashboard → API → Expose schemas).
+
+### Riscos eliminados
+
+- Nenhuma alteração de banco ou policies nesta execução.
+- Nenhum script de migration executado no fechamento.
+
+### Decisão
+
+**T9 encerrado.** Evidências versionadas em docs. test:int ficará verde após expor schemas no Supabase (ação manual). Aguardar validação humana antes de merge/tag.

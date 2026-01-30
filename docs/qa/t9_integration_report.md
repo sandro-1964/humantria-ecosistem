@@ -119,3 +119,24 @@ Tests  3 skipped (3)
 
 - Slug pattern: `int-t9-<timestamp>-<rand>`.
 - Cleanup obrigatório em `afterAll` (não executado neste run pois testes falharam antes de criar tenant).
+
+---
+
+## Fechamento canônico (safe mode) — 2026-01-30
+
+- **Branch:** qa-t9-supabase-integration
+- **Timestamp:** execução fechamento safe mode
+- **MCP — listar schemas (somente leitura):**
+
+```sql
+SELECT schema_name FROM information_schema.schemata
+WHERE schema_name IN ('foundation','core','strategy','public') ORDER BY schema_name;
+```
+
+**Output:** `[{"schema_name":"core"},{"schema_name":"foundation"},{"schema_name":"public"},{"schema_name":"strategy"}]`  
+**Critério:** foundation, core, strategy presentes — **OK**.
+
+- **test:int:** **FAIL** — `Invalid schema: foundation` (schema não exposto ao PostgREST).  
+  Para test:int verde: Supabase → Settings → API → Expose schemas → incluir `public`, `foundation`, `core`, `strategy`.
+
+- **Commit hash (fechamento canônico):** `587c491`

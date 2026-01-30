@@ -46,6 +46,7 @@ export function DiagMeta() {
       status: rbac.status,
       role: rbac.role,
       permissionsCount: rbac.permissions.length,
+      permissions: rbac.permissions,
     },
     flags: {
       status: flags.status,

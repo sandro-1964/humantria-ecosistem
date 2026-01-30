@@ -7,6 +7,7 @@ import { useTenant } from '../providers/tenant/TenantProvider'
 import { useRbac } from '../providers/rbac/RbacProvider'
 import { toText } from '../lib/to-text'
 import { MenuGate } from '../components/guards/MenuGate'
+import { ActionGate } from '../components/guards/ActionGate'
 import {
   getDemoSession,
   setDemoSession,
@@ -79,7 +80,7 @@ export function AppShell() {
         {demo?.enabled ? (
           <div style={{ marginBottom: 16, padding: 10, background: 'rgba(0,0,0,0.04)', borderRadius: 8 }}>
             <div style={{ fontSize: 11, fontWeight: 600, opacity: 0.8, marginBottom: 6 }}>
-              Simulação de Perfil (DEMO)
+              {toText(t('shell.demoProfileTitle'))}
             </div>
             <select
               value={demo.role}
@@ -110,13 +111,13 @@ export function AppShell() {
                 border: '1px solid rgba(0,0,0,0.2)',
               }}
             >
-              Sair do DEMO
+              {toText(t('shell.exitDemo'))}
             </button>
           </div>
         ) : null}
 
         <div style={{ marginBottom: 16 }}>
-          <label style={{ fontSize: 12, opacity: 0.7 }}>Language</label>
+          <label style={{ fontSize: 12, opacity: 0.7 }}>{toText(t('shell.language'))}</label>
           <div>
             <select
               value={locale}
@@ -125,6 +126,7 @@ export function AppShell() {
             >
               <option value="pt-BR">pt-BR</option>
               <option value="en-US">en-US</option>
+              <option value="es-ES">es-ES</option>
             </select>
           </div>
         </div>
@@ -164,6 +166,34 @@ export function AppShell() {
       </aside>
 
       <main style={{ padding: 20, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        {demo?.enabled ? (
+          <div
+            style={{
+              display: 'flex',
+              gap: 8,
+              marginBottom: 12,
+              paddingBottom: 8,
+              borderBottom: '1px solid rgba(0,0,0,0.06)',
+              flexWrap: 'wrap',
+            }}
+          >
+            <ActionGate permission="action:simulate">
+              <button type="button" style={{ padding: '6px 10px', borderRadius: 6, fontSize: 12 }}>
+                Simulate
+              </button>
+            </ActionGate>
+            <ActionGate permission="action:suggest_ai">
+              <button type="button" style={{ padding: '6px 10px', borderRadius: 6, fontSize: 12 }}>
+                Suggest with AI
+              </button>
+            </ActionGate>
+            <ActionGate permission="action:explain_ai">
+              <button type="button" style={{ padding: '6px 10px', borderRadius: 6, fontSize: 12 }}>
+                Explain with AI
+              </button>
+            </ActionGate>
+          </div>
+        ) : null}
         <div style={{ flex: 1 }}>
           <Outlet />
         </div>

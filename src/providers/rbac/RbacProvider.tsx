@@ -18,8 +18,15 @@ export type RbacState = {
 /** DEMO MODE: hardcoded permissions per role (no Supabase). */
 const DEMO_PERMISSIONS: Record<DemoRole, string[]> = {
   admin: ['*'],
-  manager: ['foundation:read', 'audit:read', 'docs:read'],
-  analyst: ['foundation:read', 'audit:read', 'docs:read'],
+  manager: [
+    'foundation:read',
+    'audit:read',
+    'docs:read',
+    'action:simulate',
+    'action:suggest_ai',
+    'action:explain_ai',
+  ],
+  analyst: ['foundation:read', 'audit:read', 'docs:read', 'action:suggest_ai', 'action:explain_ai'],
   auditor: ['audit:read', 'docs:read', 'compliance:read'],
 }
 

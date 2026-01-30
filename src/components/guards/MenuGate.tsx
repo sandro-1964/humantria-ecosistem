@@ -16,6 +16,7 @@ function hasAnyRole(role: string | null, allowRoles: string[] | undefined): bool
 
 function hasAllPermissions(userPerms: string[], allowPermissions: string[] | undefined): boolean {
   if (!allowPermissions || allowPermissions.length === 0) return true
+  if (userPerms.includes('*')) return true
   return allowPermissions.every((p) => userPerms.includes(p))
 }
 

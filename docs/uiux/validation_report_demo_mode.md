@@ -22,7 +22,7 @@
 | Badge "DEMO" no shell | Sidebar, ao lado do nome do tenant |
 | Simulação de Perfil (DEMO) | Sidebar: dropdown de perfil + "Sair do DEMO" |
 | Footer | "DEMO • &lt;role&gt; • &lt;tenant&gt;" no rodapé da área principal |
-| Meta diag | `/__diag/meta`: `demo.enabled`, `demo.role`, `tenantId`, `userEmail`, `buildCommit` |
+| Meta diag | `/__diag/meta`: `demo.enabled`, `demo.role`, `tenantId`, `userEmail`, `buildCommit`, `rbac.permissions` (lista de permissões calculadas) |
 
 ---
 
@@ -57,6 +57,39 @@
 - [ ] Teste 3 executado e passou
 
 *(Preencher após execução manual; incluir prints ou anotações se necessário.)*
+
+---
+
+## Admin vs Auditor (menu e ações)
+
+### Menu (sidebar)
+
+| Item | Admin | Auditor |
+|------|-------|---------|
+| DIAG | sim | sim |
+| Foundation | sim | sim |
+| Tenants | sim | não |
+| Settings | sim | não |
+| Users & Roles | sim | não |
+| Audit Timeline | sim | sim |
+| Wizard | sim | não |
+| Tools / Docs | sim | sim |
+| Legacy Integrations | sim | não |
+
+### Barra de ações (header)
+
+Botões "Simulate", "Suggest with AI", "Explain with AI" aparecem apenas quando o role tem a permissão correspondente:
+
+| Botão | Admin | Manager | Analyst | Auditor |
+|-------|-------|---------|---------|---------|
+| Simulate | sim | sim | não | não |
+| Suggest with AI | sim | sim | sim | não |
+| Explain with AI | sim | sim | sim | não |
+
+- **Admin:** vê os três botões.
+- **Auditor:** não vê nenhum (somente leitura/compliance).
+
+*Evidência: em DEMO, trocar perfil para Auditor e confirmar que a barra de ações fica vazia; trocar para Admin e confirmar os três botões.*
 
 ---
 

@@ -139,4 +139,4 @@ WHERE schema_name IN ('foundation','core','strategy','public') ORDER BY schema_n
 - **test:int:** **FAIL** — `Invalid schema: foundation` (schema não exposto ao PostgREST).  
   Para test:int verde: Supabase → Settings → API → Expose schemas → incluir `public`, `foundation`, `core`, `strategy`.
 
-- **Commit hash (fechamento canônico):** `587c491`
+- **Commit hash (fechamento canônico):** `8370ca0`

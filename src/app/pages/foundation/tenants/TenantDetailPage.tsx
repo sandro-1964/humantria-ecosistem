@@ -4,15 +4,18 @@ import { useParams } from 'react-router-dom'
 import { LoadingState, ErrorState } from '../../../../providers/app/states'
 import { getSupabaseClient } from '../../../../services/supabase/client'
 import { toText } from '../../../../lib/to-text'
+import { useStubSafe } from '../../../../hooks/use-stub-safe'
+import { StubPageLayout } from '../../../../components/stubs/StubPageLayout'
 
 type TenantRow = { id: string; name: string; slug: string; status: string; metadata: unknown }
 
 export function TenantDetailPage() {
   const { tenantId } = useParams()
+  const stubSafe = useStubSafe()
 
   const q = useQuery<TenantRow | null>({
     queryKey: ['foundation', 'tenants', 'detail', tenantId],
-    enabled: Boolean(tenantId),
+    enabled: Boolean(tenantId) && !stubSafe,
     queryFn: async () => {
       const supabase = getSupabaseClient()
       const res = await supabase
@@ -25,6 +28,29 @@ export function TenantDetailPage() {
       return (res.data as TenantRow | null) ?? null
     },
   })
+
+  if (stubSafe) {
+    const stubRow: TenantRow = {
+      id: tenantId ?? 'tenant_demo',
+      name: 'Humantría Demo',
+      slug: 'demo',
+      status: 'active',
+      metadata: { locale: 'pt-BR' },
+    }
+    return (
+      <StubPageLayout
+        title="Tenant detail"
+        expectedItems={['id', 'name', 'slug', 'status', 'metadata', 'CRUD: ver, editar (platform_owner)']}
+        fakeList={
+          <div>
+            <p><strong>Name:</strong> {toText(stubRow.name)}</p>
+            <p><strong>Slug:</strong> {toText(stubRow.slug)}</p>
+            <p><strong>Status:</strong> {toText(stubRow.status)}</p>
+          </div>
+        }
+      />
+    )
+  }
 
   if (q.isLoading) return <LoadingState />
   if (q.isError) return <ErrorState details={q.error instanceof Error ? q.error.message : 'tenant_error'} />

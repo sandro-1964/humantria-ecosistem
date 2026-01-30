@@ -3,6 +3,8 @@ import { createContext, useContext, useMemo } from 'react'
 
 import { useTenant } from '../tenant/TenantProvider'
 import { useFlagsQuery } from '../../hooks/use-flags'
+import { getDemoSession } from '../../services/demo/demo-session'
+import { hasSupabaseEnv } from '../../services/supabase/client'
 
 export type FlagsStatus = 'loading' | 'ready' | 'error'
 
@@ -15,11 +17,23 @@ export type FlagsState = {
 
 const FlagsContext = createContext<FlagsState | null>(null)
 
+const EMPTY_FLAGS_STATE: FlagsState = {
+  status: 'ready',
+  flags: {},
+  errorMessage: null,
+  isEnabled: () => false,
+}
+
 export function FlagsProvider({ children }: { children: ReactNode }) {
   const tenant = useTenant()
-  const q = useFlagsQuery({ enabled: tenant.status === 'ready', tenantId: tenant.tenantId })
+  const demo = getDemoSession()
+  const useRealFlags = tenant.status === 'ready' && !demo?.enabled && hasSupabaseEnv()
+  const q = useFlagsQuery({ enabled: useRealFlags, tenantId: tenant.tenantId })
 
   const value = useMemo<FlagsState>(() => {
+    if (demo?.enabled || !hasSupabaseEnv()) {
+      return EMPTY_FLAGS_STATE
+    }
     if (q.isLoading) {
       return {
         status: 'loading',
@@ -43,7 +57,7 @@ export function FlagsProvider({ children }: { children: ReactNode }) {
       errorMessage: null,
       isEnabled: (flagCode: string) => Boolean(flags[flagCode]),
     }
-  }, [q.data, q.error, q.isError, q.isLoading])
+  }, [demo?.enabled, q.data, q.error, q.isError, q.isLoading])
 
   return <FlagsContext.Provider value={value}>{children}</FlagsContext.Provider>
 }

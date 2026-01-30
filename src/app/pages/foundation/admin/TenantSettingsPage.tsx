@@ -5,6 +5,8 @@ import { useTenant } from '../../../../providers/tenant/TenantProvider'
 import { getSupabaseClient } from '../../../../services/supabase/client'
 import { toText } from '../../../../lib/to-text'
 import { writeUiIncident } from '../../../../services/incident/incident-log'
+import { useStubSafe } from '../../../../hooks/use-stub-safe'
+import { StubPageLayout } from '../../../../components/stubs/StubPageLayout'
 
 type TenantSettingsRow = {
   tenant_id: string
@@ -17,10 +19,11 @@ type TenantSettingsRow = {
 export function TenantSettingsPage() {
   const tenant = useTenant()
   const qc = useQueryClient()
+  const stubSafe = useStubSafe()
 
   const q = useQuery<TenantSettingsRow | null>({
     queryKey: ['foundation', 'tenant_settings', tenant.tenantId],
-    enabled: Boolean(tenant.tenantId),
+    enabled: Boolean(tenant.tenantId) && !stubSafe,
     queryFn: async () => {
       const supabase = getSupabaseClient()
       const res = await supabase
@@ -64,6 +67,23 @@ export function TenantSettingsPage() {
       })
     },
   })
+
+  if (stubSafe) {
+    return (
+      <StubPageLayout
+        title="Tenant Settings"
+        expectedItems={['tenant_id', 'locale', 'timezone', 'base_currency', 'metadata', 'CRUD: ler, atualizar (tenant_admin)']}
+        fakeList={
+          <ul>
+            <li>Locale: pt-BR</li>
+            <li>Timezone: America/Sao_Paulo</li>
+            <li>Base currency: BRL</li>
+          </ul>
+        }
+        readOnly={false}
+      />
+    )
+  }
 
   if (q.isLoading) return <LoadingState />
   if (q.isError) return <ErrorState details={q.error instanceof Error ? q.error.message : 'settings_error'} />

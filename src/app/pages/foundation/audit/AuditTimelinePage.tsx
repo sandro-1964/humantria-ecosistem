@@ -4,6 +4,8 @@ import { LoadingState, EmptyState, ErrorState } from '../../../../components/sta
 import { useTenant } from '../../../../providers/tenant/TenantProvider'
 import { getSupabaseClient } from '../../../../services/supabase/client'
 import { toText } from '../../../../lib/to-text'
+import { useStubSafe } from '../../../../hooks/use-stub-safe'
+import { StubPageLayout } from '../../../../components/stubs/StubPageLayout'
 
 type AuditFunctionalRow = {
   id: string
@@ -15,12 +17,19 @@ type AuditFunctionalRow = {
   created_at: string
 }
 
+const STUB_AUDIT: AuditFunctionalRow[] = [
+  { id: 'audit-1', decision_type: 'ui.action', entity_type: 'tenant_settings', entity_id: null, user_email: 'demo+admin@humantria.local', justification: 'Stub entry', created_at: '2026-01-29T12:00:00Z' },
+  { id: 'audit-2', decision_type: 'audit.read', entity_type: 'audit_log', entity_id: 'audit-1', user_email: 'demo+auditor@humantria.local', justification: 'Compliance view', created_at: '2026-01-29T11:00:00Z' },
+  { id: 'audit-3', decision_type: 'ui.action', entity_type: 'user_role_assignments', entity_id: 'user_1', user_email: 'demo+admin@humantria.local', justification: 'Role assigned', created_at: '2026-01-28T10:00:00Z' },
+]
+
 export function AuditTimelinePage() {
   const tenant = useTenant()
+  const stubSafe = useStubSafe()
 
   const q = useQuery<AuditFunctionalRow[]>({
     queryKey: ['foundation', 'audit_log_functional', tenant.tenantId],
-    enabled: Boolean(tenant.tenantId),
+    enabled: Boolean(tenant.tenantId) && !stubSafe,
     queryFn: async () => {
       const supabase = getSupabaseClient()
       const res = await supabase
@@ -34,6 +43,32 @@ export function AuditTimelinePage() {
       return (res.data as AuditFunctionalRow[]) ?? []
     },
   })
+
+  if (stubSafe) {
+    return (
+      <StubPageLayout
+        title="Audit Timeline"
+        expectedItems={['id', 'decision_type', 'entity_type', 'entity_id', 'user_email', 'justification', 'created_at', 'Somente leitura (compliance)']}
+        fakeList={
+          <ul>
+            {STUB_AUDIT.map((r) => (
+              <li key={r.id} style={{ marginBottom: 8 }}>
+                <div>
+                  <strong>{toText(r.decision_type)}</strong> — {toText(r.entity_type)}{' '}
+                  <span style={{ opacity: 0.7 }}>{toText(r.entity_id ?? '')}</span>
+                </div>
+                <div style={{ fontSize: 12, opacity: 0.8 }}>
+                  {toText(r.user_email ?? '')} · {toText(r.created_at)}
+                </div>
+                {r.justification ? <div>{toText(r.justification)}</div> : null}
+              </li>
+            ))}
+          </ul>
+        }
+        readOnly={true}
+      />
+    )
+  }
 
   if (q.isLoading) return <LoadingState testid="state-loading-audit" />
   if (q.isError)

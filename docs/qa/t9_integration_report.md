@@ -140,3 +140,23 @@ WHERE schema_name IN ('foundation','core','strategy','public') ORDER BY schema_n
   Para test:int verde: Supabase → Settings → API → Expose schemas → incluir `public`, `foundation`, `core`, `strategy`.
 
 - **Commit hash (fechamento canônico):** `8370ca0`
+
+---
+
+## Safe mode ultra minimalista (somente leitura)
+
+**Pre-flight:** `git status --short` → ` M contracts/foundation/003_functions.sql`, ` M contracts/foundation/004_rls.sql`, `?? scripts/`. Branch: `qa-t9-supabase-integration`.
+
+**MCP (read-only):**
+
+| Query | Output real |
+|-------|-------------|
+| Schemas (foundation, core, strategy, public) | `[{"schema_name":"core"},{"schema_name":"foundation"},{"schema_name":"public"},{"schema_name":"strategy"}]` |
+| COUNT pg_policies WHERE schemaname='foundation' | `[{"n":81}]` |
+| COUNT pg_tables foundation rowsecurity=true | `[{"n":36}]` |
+| COUNT foundation.tenants | `[{"n":1}]` |
+| COUNT strategy.objectives | `[{"n":3}]` |
+
+**test:int:** FAIL — erro exato: `Unknown Error: Invalid schema: foundation` (createTemporaryTenant error: Invalid schema: foundation). Test Files 2 failed (2), Tests 3 skipped (3).
+
+**Confirmação explícita:** Nenhuma alteração no banco. Somente validações de leitura e documentação.

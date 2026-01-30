@@ -80,3 +80,9 @@ Registrar em `docs/qa/t9_integration_report.md`:
 - Não executar seed (005) sem GO explícito do comandante.
 - Não usar Supabase SQL Editor para alterações.
 - Não fazer merge nem tag sem validação humana.
+
+---
+
+## Confirmação (safe mode)
+
+**Nenhuma alteração no banco.** Este runbook cobre somente validações de leitura (MCP), resultado de test:int e evidências em docs. Nenhum SQL write, migration ou seed foi executado.

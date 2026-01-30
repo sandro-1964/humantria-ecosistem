@@ -92,3 +92,10 @@
 ### Decisão
 
 **T9 encerrado.** Evidências versionadas em docs. test:int ficará verde após expor schemas no Supabase (ação manual). Aguardar validação humana antes de merge/tag.
+
+### Safe mode ultra minimalista (última execução)
+
+- **Pre-flight:** branch qa-t9-supabase-integration; status: M contracts/foundation/003_functions.sql, M 004_rls.sql, ?? scripts/
+- **MCP:** schemas (core, foundation, public, strategy) OK; policies 81; foundation RLS tables 36; foundation.tenants=1; strategy.objectives=3
+- **test:int:** FAIL — `Invalid schema: foundation`
+- **Confirmação explícita:** Nenhuma alteração no banco. Somente leitura e documentação.

@@ -9,6 +9,8 @@ import { TenantSettingsPage } from '../pages/foundation/admin/TenantSettingsPage
 import { UsersAndRolesPage } from '../pages/foundation/admin/UsersAndRolesPage'
 import { AuditTimelinePage } from '../pages/foundation/audit/AuditTimelinePage'
 import { TenantBootstrapWizardPage } from '../pages/foundation/wizard/TenantBootstrapWizardPage'
+import { CoreStubPage } from '../pages/core/CoreStubPage'
+import { StrategyStubPage } from '../pages/strategy/StrategyStubPage'
 import { ToolsDocsPage } from '../pages/tools/ToolsDocsPage'
 import { ToolsLegacyIntegrationsPage } from '../pages/tools/ToolsLegacyIntegrationsPage'
 import { AppShell } from '../../shell/AppShell'
@@ -80,6 +82,9 @@ export function createAppRouter() {
             </RequireRole>
           ),
         },
+
+        { path: '/core', element: <CoreStubPage /> },
+        { path: '/strategy', element: <StrategyStubPage /> },
 
         { path: '/tools/docs', element: <ToolsDocsPage /> },
         {

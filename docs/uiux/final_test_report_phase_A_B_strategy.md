@@ -2,7 +2,7 @@
 
 **Branch:** ui-ux-migration-v3  
 **Commit base conhecido:** 461ab9f (B2 stub-safe admin + flags ready)  
-**Commit T4:** e22520c
+**Commit T4:** c076ab3
 
 ---
 

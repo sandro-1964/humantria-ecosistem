@@ -90,6 +90,28 @@
 
 ---
 
+## T5 — Estabilidade/Blindagem da UI — CONCLUÍDO
+
+**Objetivo:** Eliminar telas brancas; garantir que /__diag e /__diag/meta sempre respondem; proteção global contra exceções inesperadas.
+
+### Alterações
+
+- **Novo** `src/components/ErrorBoundary.tsx` — componente de classe com getDerivedStateFromError, componentDidCatch (console.error), fallback UI com link para /__diag.
+- **AppRoot.tsx** — AppReadyGate removido da raiz; ErrorBoundary envolve AppProviders > RouterProvider.
+- **routes.tsx** — AppReadyGate aplicado apenas ao layout autenticado (RequireAuth > RequireTenant > AppShell); rotas /__diag e /__diag/meta sem gate (sempre acessíveis).
+
+### Validação
+
+- `npm run build` passa.
+- /__diag e /__diag/meta acessíveis mesmo com auth loading/error ou não autenticado.
+- Erro não capturado em qualquer componente mostra fallback em vez de tela branca.
+
+### Commit
+
+- 70ebcc7 — feat(ui): T5 stability - root ErrorBoundary + DIAG always reachable
+
+---
+
 ## Histórico
 
 | Fase | Descrição |
@@ -97,4 +119,5 @@
 | A | Foundation + admin stubs (TenantSettings, UsersAndRoles, Audit) |
 | B | Flags ready, /__diag/meta, DEMO mode |
 | T4 | /core e /strategy stub routes (no 404) |
-| T3 | i18n Shell + nav (pt-BR, en-US, es-ES); módulos não traduzem; labels funcionais traduzidos — CONCLUÍDO |
+| T3 | i18n Shell + nav (pt-BR, en-US, es-ES); módulos não traduzem — CONCLUÍDO |
+| T5 | Estabilidade: ErrorBoundary na raiz; DIAG sempre acessível — CONCLUÍDO |

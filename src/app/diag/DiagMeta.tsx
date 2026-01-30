@@ -14,6 +14,8 @@ export function DiagMeta() {
   const flags = useFlags()
 
   const meta = {
+    supabaseConfigured:
+      !!(import.meta.env.VITE_SUPABASE_URL && import.meta.env.VITE_SUPABASE_ANON_KEY),
     app: {
       version: import.meta.env.VITE_APP_VERSION ?? 'dev',
       mode: import.meta.env.MODE,

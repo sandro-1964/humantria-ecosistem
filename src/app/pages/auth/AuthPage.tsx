@@ -3,7 +3,8 @@ import { useTranslation } from 'react-i18next'
 
 import { ErrorState, LoadingState } from '../../../providers/app/states'
 import { toText } from '../../../lib/to-text'
-import { getSupabaseClient } from '../../../services/supabase/client'
+import { getSupabaseClient, hasSupabaseEnv } from '../../../services/supabase/client'
+import { useAuth } from '../../../providers/auth/AuthProvider'
 import { startDemoWithRole, type DemoRole } from '../../../services/demo/demo-session'
 
 const DEMO_ROLES: { value: DemoRole; label: string }[] = [
@@ -15,6 +16,7 @@ const DEMO_ROLES: { value: DemoRole; label: string }[] = [
 
 export function AuthPage() {
   const { t } = useTranslation()
+  const auth = useAuth()
 
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
@@ -24,6 +26,11 @@ export function AuthPage() {
   async function signIn() {
     setStatus('loading')
     setError(null)
+    if (!hasSupabaseEnv()) {
+      setStatus('error')
+      setError('Supabase não configurado')
+      return
+    }
     try {
       const supabase = getSupabaseClient()
       const res = await supabase.auth.signInWithPassword({ email, password })
@@ -44,6 +51,21 @@ export function AuthPage() {
   return (
     <div style={{ padding: 24 }}>
       <h1>{toText(t('auth.title'))}</h1>
+
+      {auth.supabaseNotConfigured ? (
+        <div
+          style={{
+            marginBottom: 16,
+            padding: 12,
+            background: 'rgba(255, 193, 7, 0.15)',
+            border: '1px solid rgba(255, 193, 7, 0.5)',
+            borderRadius: 8,
+            fontSize: 14,
+          }}
+        >
+          Supabase não configurado. Use DEMO abaixo ou configure VITE_SUPABASE_URL e VITE_SUPABASE_ANON_KEY no .env.
+        </div>
+      ) : null}
 
       <div style={{ display: 'grid', gap: 8, maxWidth: 360 }}>
         <label>

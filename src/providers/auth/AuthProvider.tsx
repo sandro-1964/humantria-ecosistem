@@ -2,7 +2,7 @@ import type { Session, User } from '@supabase/supabase-js'
 import type { ReactNode } from 'react'
 import { createContext, useContext, useEffect, useMemo, useState } from 'react'
 
-import { getSupabaseClient } from '../../services/supabase/client'
+import { getSupabaseClient, hasSupabaseEnv } from '../../services/supabase/client'
 import {
   getDemoSession,
   DEMO_SESSION_CHANGE_EVENT,
@@ -16,6 +16,8 @@ export type AuthState = {
   session: Session | null
   user: User | null
   errorMessage: string | null
+  /** True when env (VITE_SUPABASE_*) is missing; DEMO still works. */
+  supabaseNotConfigured?: boolean
 }
 
 type AuthContextValue = AuthState & {
@@ -49,6 +51,7 @@ function applyDemoOrSupabase(
       session: { access_token: 'demo', refresh_token: '', expires_in: 0, token_type: 'bearer', user: syntheticUserFromDemo(demo) } as Session,
       user: syntheticUserFromDemo(demo),
       errorMessage: null,
+      supabaseNotConfigured: false,
     })
     return
   }
@@ -57,6 +60,7 @@ function applyDemoOrSupabase(
     session: supabaseSession ?? null,
     user: supabaseUser ?? null,
     errorMessage: error,
+    supabaseNotConfigured: false,
   })
 }
 
@@ -72,6 +76,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     let unsub: (() => void) | null = null
 
     function initSupabase() {
+      if (!hasSupabaseEnv()) {
+        setState({
+          status: 'anonymous',
+          session: null,
+          user: null,
+          errorMessage: null,
+          supabaseNotConfigured: true,
+        })
+        return
+      }
       ;(async () => {
         try {
           const supabase = getSupabaseClient()
@@ -89,6 +103,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             session: null,
             user: null,
             errorMessage: e instanceof Error ? e.message : 'auth_error',
+            supabaseNotConfigured: false,
           })
         }
       })()
@@ -97,6 +112,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const demo = getDemoSession()
     if (demo?.enabled) {
       applyDemoOrSupabase(setState, demo, null, null, null)
+    } else if (!hasSupabaseEnv()) {
+      setState({
+        status: 'anonymous',
+        session: null,
+        user: null,
+        errorMessage: null,
+        supabaseNotConfigured: true,
+      })
     } else {
       initSupabase()
     }
@@ -128,6 +151,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           clearDemoSession()
           return
         }
+        if (!hasSupabaseEnv()) return
         const supabase = getSupabaseClient()
         await supabase.auth.signOut()
       },

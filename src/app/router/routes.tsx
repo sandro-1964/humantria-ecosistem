@@ -14,6 +14,7 @@ import { StrategyStubPage } from '../pages/strategy/StrategyStubPage'
 import { ToolsDocsPage } from '../pages/tools/ToolsDocsPage'
 import { ToolsLegacyIntegrationsPage } from '../pages/tools/ToolsLegacyIntegrationsPage'
 import { AppShell } from '../../shell/AppShell'
+import { AppReadyGate } from '../../providers/app/AppReadyGate'
 import { RequireAuth, RequireRole, RequireTenant } from './guards'
 
 export function createAppRouter() {
@@ -26,11 +27,13 @@ export function createAppRouter() {
     {
       path: '/',
       element: (
-        <RequireAuth>
-          <RequireTenant>
-            <AppShell />
-          </RequireTenant>
-        </RequireAuth>
+        <AppReadyGate>
+          <RequireAuth>
+            <RequireTenant>
+              <AppShell />
+            </RequireTenant>
+          </RequireAuth>
+        </AppReadyGate>
       ),
       children: [
         { path: '/foundation', element: <FoundationHomePage /> },

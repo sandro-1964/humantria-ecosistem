@@ -4,7 +4,7 @@ import { RouterProvider } from 'react-router-dom'
 import '../../i18n'
 import { createAppRouter } from '../router/routes'
 import { AppProviders } from './AppProviders'
-import { AppReadyGate } from '../../providers/app/AppReadyGate'
+import { ErrorBoundary } from '../../components/ErrorBoundary'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,11 +20,11 @@ const router = createAppRouter()
 export function AppRoot() {
   return (
     <QueryClientProvider client={queryClient}>
-      <AppProviders>
-        <AppReadyGate>
+      <ErrorBoundary>
+        <AppProviders>
           <RouterProvider router={router} />
-        </AppReadyGate>
-      </AppProviders>
+        </AppProviders>
+      </ErrorBoundary>
     </QueryClientProvider>
   )
 }

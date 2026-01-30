@@ -112,6 +112,32 @@
 
 ---
 
+## T6 — Observabilidade / Saúde da UI — CONCLUÍDO
+
+**Objetivo:** Tornar o estado da plataforma visível e diagnosticável. Build info, environment, health snapshot, fingerprint no footer, DIAG robusto.
+
+### Alterações
+
+- **Novo** `src/lib/build-info.ts` — version, buildCommit, timestamp, fingerprint (Vite define injeta __BUILD_TIMESTAMP__ e __BUILD_FINGERPRINT__).
+- **vite.config.ts** — define: __BUILD_TIMESTAMP__ (ISO), __BUILD_FINGERPRINT__ (random 8 chars).
+- **BrandProvider.tsx** — expõe `status: 'loading' | 'ready' | 'error'` no context.
+- **DiagMeta.tsx** — blocos `build`, `environment` (env, supabaseConfigured, demo.enabled), `health` (auth/tenant/rbac/flags/brand.status); try/catch na montagem do JSON; nunca lança exceção.
+- **AppShell.tsx** — footer sempre visível com `v{version} · {fingerprint}`; em DEMO, linha adicional "DEMO • role • tenant".
+
+### Validação
+
+- `npm run build` passa.
+- `npm run dev` inicia sem erro.
+- `/__diag/meta` contém build, environment, health; sem crashes.
+- `/foundation` (autenticado) — footer mostra fingerprint discreto.
+- DiagMeta: try/catch cobre montagem e JSON.stringify; fallback em caso de erro.
+
+### Commit
+
+- 5a757cf — feat(ui): T6 observability - build info, fingerprint, health snapshot, robust DIAG
+
+---
+
 ## Histórico
 
 | Fase | Descrição |
@@ -121,3 +147,4 @@
 | T4 | /core e /strategy stub routes (no 404) |
 | T3 | i18n Shell + nav (pt-BR, en-US, es-ES); módulos não traduzem — CONCLUÍDO |
 | T5 | Estabilidade: ErrorBoundary na raiz; DIAG sempre acessível — CONCLUÍDO |
+| T6 | Observabilidade: build info, fingerprint, health snapshot, DIAG robusto — CONCLUÍDO |

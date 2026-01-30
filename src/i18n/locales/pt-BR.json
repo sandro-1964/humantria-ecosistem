@@ -2,9 +2,16 @@
   "app": {
     "title": "HUMANTRÍA"
   },
+  "shell": {
+    "language": "Idioma",
+    "demoProfileTitle": "Simulação de Perfil (DEMO)",
+    "exitDemo": "Sair do DEMO"
+  },
   "nav": {
     "diag": "DIAG",
     "foundation": "Foundation",
+    "core": "Core",
+    "strategy": "Estratégia",
     "tools": "Tools",
     "tenants": "Tenants",
     "settings": "Settings",

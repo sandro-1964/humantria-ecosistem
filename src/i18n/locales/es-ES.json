@@ -1,0 +1,47 @@
+{
+  "app": {
+    "title": "HUMANTRÍA"
+  },
+  "nav": {
+    "diag": "DIAG",
+    "foundation": "Foundation",
+    "core": "Core",
+    "strategy": "Estrategia",
+    "tools": "Herramientas",
+    "tenants": "Inquilinos",
+    "settings": "Configuración",
+    "usersRoles": "Usuarios y roles",
+    "audit": "Línea de tiempo de auditoría",
+    "wizard": "Asistente",
+    "docs": "Documentación",
+    "legacy": "Integraciones con legados"
+  },
+  "shell": {
+    "language": "Idioma",
+    "demoProfileTitle": "Simulación de perfil (DEMO)",
+    "exitDemo": "Salir del DEMO"
+  },
+  "states": {
+    "loadingTitle": "Cargando",
+    "loadingBody": "Estamos preparando el entorno.",
+    "emptyTitle": "Nada que mostrar",
+    "emptyBody": "No hay datos suficientes. Compruebe permisos, inquilino y seeds.",
+    "errorTitle": "Algo salió mal",
+    "errorBody": "No se pudo completar la operación. Abra DIAG para diagnosticar.",
+    "accessDeniedTitle": "Acceso denegado",
+    "accessDeniedBody": "No tiene permiso para acceder a esta área.",
+    "openDiag": "Abrir DIAG"
+  },
+  "auth": {
+    "title": "Acceso",
+    "email": "Correo",
+    "password": "Contraseña",
+    "signIn": "Entrar",
+    "signOut": "Salir"
+  },
+  "diag": {
+    "title": "DIAG",
+    "meta": "Meta",
+    "openMeta": "Abrir /__diag/meta"
+  }
+}

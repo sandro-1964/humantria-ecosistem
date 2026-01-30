@@ -157,11 +157,11 @@ export function AppShell() {
             <MenuItem to="/foundation/wizard/bootstrap" label={t('nav.wizard')} />
           </MenuGate>
 
-          <div style={{ marginTop: 10, fontSize: 12, opacity: 0.7 }}>Core</div>
-          <MenuItem to="/core" label="Core" />
+          <div style={{ marginTop: 10, fontSize: 12, opacity: 0.7 }}>{toText(t('nav.core'))}</div>
+          <MenuItem to="/core" label={t('nav.core')} />
 
-          <div style={{ marginTop: 10, fontSize: 12, opacity: 0.7 }}>Strategy</div>
-          <MenuItem to="/strategy" label="Strategy" />
+          <div style={{ marginTop: 10, fontSize: 12, opacity: 0.7 }}>{toText(t('nav.strategy'))}</div>
+          <MenuItem to="/strategy" label={t('nav.strategy')} />
 
           <div style={{ marginTop: 10, fontSize: 12, opacity: 0.7 }}>{toText(t('nav.tools'))}</div>
           <MenuItem to="/tools/docs" label={t('nav.docs')} />

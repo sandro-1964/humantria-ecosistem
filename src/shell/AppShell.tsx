@@ -2,6 +2,7 @@ import { NavLink, Outlet } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
 import { setLocale, getLocale } from '../i18n'
+import { buildInfo } from '../lib/build-info'
 import { useBrand } from '../providers/brand/BrandProvider'
 import { useTenant } from '../providers/tenant/TenantProvider'
 import { useRbac } from '../providers/rbac/RbacProvider'
@@ -203,19 +204,23 @@ export function AppShell() {
         <div style={{ flex: 1 }}>
           <Outlet />
         </div>
-        {demo?.enabled ? (
-          <footer
-            style={{
-              marginTop: 16,
-              paddingTop: 8,
-              borderTop: '1px solid rgba(0,0,0,0.06)',
-              fontSize: 11,
-              opacity: 0.7,
-            }}
-          >
-            DEMO • {toText(rbac.role ?? '—')} • {toText(tenant.tenantName ?? '—')}
-          </footer>
-        ) : null}
+        <footer
+          style={{
+            marginTop: 16,
+            paddingTop: 8,
+            borderTop: '1px solid rgba(0,0,0,0.06)',
+            fontSize: 11,
+            opacity: 0.7,
+          }}
+        >
+          {demo?.enabled ? (
+            <>
+              DEMO • {toText(rbac.role ?? '—')} • {toText(tenant.tenantName ?? '—')}
+              <br />
+            </>
+          ) : null}
+          v{toText(buildInfo.version)} · {toText(buildInfo.fingerprint)}
+        </footer>
       </main>
     </div>
   )

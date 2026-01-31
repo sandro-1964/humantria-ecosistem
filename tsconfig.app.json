@@ -1,7 +1,13 @@
 {
   "compilerOptions": {
     "baseUrl": ".",
-    "paths": { "@/*": ["src/*"] },
+    "paths": {
+      "@/components/*": ["src/ui/lovable/components/*"],
+      "@/contexts/*": ["src/ui/lovable/contexts/*"],
+      "@/hooks/*": ["src/ui/lovable/hooks/*"],
+      "@/lib/*": ["src/ui/lovable/lib/*"],
+      "@/*": ["src/*"]
+    },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",
     "useDefineForClassFields": true,
@@ -26,5 +32,6 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src"]
+  "include": ["src/main.tsx", "src/App.tsx"],
+  "exclude": ["src/ui/lovable", "src/app", "src/shell", "src/components", "src/design-system", "src/hooks", "src/i18n", "src/lib", "src/providers", "src/services"]
 }

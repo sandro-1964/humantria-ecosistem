@@ -6,6 +6,12 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   resolve: {
-    alias: { '@': path.resolve(__dirname, 'src') },
+    alias: {
+      '@/components': path.resolve(__dirname, 'src/ui/lovable/components'),
+      '@/contexts': path.resolve(__dirname, 'src/ui/lovable/contexts'),
+      '@/hooks': path.resolve(__dirname, 'src/ui/lovable/hooks'),
+      '@/lib': path.resolve(__dirname, 'src/ui/lovable/lib'),
+      '@': path.resolve(__dirname, 'src'),
+    },
   },
 })

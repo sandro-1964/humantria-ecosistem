@@ -1,0 +1,24 @@
+/* Lovable kit — design tokens and base styles (can be replaced by full export) */
+.lovable-btn {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.lovable-btn-primary { background: #2563eb; color: #fff; }
+.lovable-btn-secondary { background: #e2e8f0; color: #1e293b; }
+.lovable-btn-ghost { background: transparent; color: #475569; }
+.lovable-card {
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 1rem;
+  background: #fff;
+}
+.lovable-card-title { font-weight: 600; margin-bottom: 0.5rem; }
+.lovable-sidebar {
+  width: 240px;
+  min-height: 100vh;
+  background: #f8fafc;
+  border-right: 1px solid #e2e8f0;
+}

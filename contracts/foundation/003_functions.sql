@@ -500,6 +500,7 @@ $$;
 
 COMMENT ON FUNCTION foundation.trigger_tenant_event() IS 'Publica eventos quando tenant é criado/atualizado';
 
+DROP TRIGGER IF EXISTS trigger_tenant_event ON foundation.tenants;
 CREATE TRIGGER trigger_tenant_event
     AFTER INSERT OR UPDATE ON foundation.tenants
     FOR EACH ROW

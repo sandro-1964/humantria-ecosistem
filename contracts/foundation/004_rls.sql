@@ -72,6 +72,15 @@ ALTER TABLE foundation.platform_audit ENABLE ROW LEVEL SECURITY;
 -- ============================================================================
 -- TENANTS
 -- ============================================================================
+-- Idempotência: remover políticas existentes antes de recriar
+DO $$
+DECLARE r RECORD;
+BEGIN
+  FOR r IN SELECT policyname, tablename FROM pg_policies WHERE schemaname = 'foundation'
+  LOOP
+    EXECUTE format('DROP POLICY IF EXISTS %I ON foundation.%I', r.policyname, r.tablename);
+  END LOOP;
+END $$;
 
 -- Platform Owner: visão soberana (todos os tenants)
 CREATE POLICY policy_tenants_platform_owner_all

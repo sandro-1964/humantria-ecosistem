@@ -50,7 +50,7 @@ Replay controlado (consumers e checkpoints governados).
 
 5. Proibições
 
-❌ FK cross-product.
+❌ FK cross-product (Produto↔Produto). FK Produto→Core/Foundation é permitida (Decisão 2026-01-31).
 
 ❌ “tabela no public porque é mais rápido”.
 

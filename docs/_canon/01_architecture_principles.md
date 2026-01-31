@@ -28,6 +28,14 @@ events_outbox (bridge-first)
 
 ✅ Funções governadas, sem “mágica invisível” (triggers mínimos e auditáveis)
 
+2.1. Regras de Dependência entre Camadas (Decisão 2026-01-31)
+
+**Permitido:** FK Produto→Core e FK Produto→Foundation (produtos dependem da base).
+
+**Proibido:** FK Core/Foundation→Produto e FK Produto↔Produto.
+
+Ref.: docs/decisions/2026-01-31-layer-dependency-fk-policy.md
+
 3. Multi-tenancy e segurança
 
 tenant_id obrigatório (exceto catálogos globais explicitamente marcados)

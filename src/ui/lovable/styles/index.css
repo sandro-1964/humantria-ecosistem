@@ -3,8 +3,7 @@
 @tailwind utilities;
 
 /* HUMANTRÍA Design System - Enterprise Decision Governance Platform */
-
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+/* Inter font loaded via index.html (postcss-safe: @import must precede all other statements) */
 
 @layer base {
   :root {

@@ -1,16 +1,7 @@
 /**
- * T9 Integration tests: load .env.local if present and validate required env vars.
- * Does not fail if .env.local is missing.
+ * T9 Integration tests: validate required env vars.
+ * Env is loaded by vitest.integration.config.ts (priority: .env.test > .env.local > .env).
  */
-import { existsSync } from 'node:fs'
-import { resolve } from 'node:path'
-import { config } from 'dotenv'
-
-const envLocalPath = resolve(process.cwd(), '.env.local')
-if (existsSync(envLocalPath)) {
-  config({ path: envLocalPath })
-}
-
 const required = [
   'SUPABASE_URL',
   'SUPABASE_ANON_KEY',

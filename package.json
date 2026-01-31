@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "test:int": "vitest -c vitest.integration.config.ts run",
+    "test:int:watch": "vitest -c vitest.integration.config.ts"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.91.0",
@@ -20,6 +22,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.1",
+    "dotenv": "^16.4.5",
+    "vitest": "^2.1.0",
     "@types/node": "^24.10.1",
     "@types/react": "^19.2.5",
     "@types/react-dom": "^19.2.3",

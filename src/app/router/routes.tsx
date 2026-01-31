@@ -11,6 +11,15 @@ import { AuditTimelinePage } from '../pages/foundation/audit/AuditTimelinePage'
 import { TenantBootstrapWizardPage } from '../pages/foundation/wizard/TenantBootstrapWizardPage'
 import { ToolsDocsPage } from '../pages/tools/ToolsDocsPage'
 import { ToolsLegacyIntegrationsPage } from '../pages/tools/ToolsLegacyIntegrationsPage'
+import { StrategyHomePage } from '../pages/strategy/StrategyHomePage'
+import { ObjectivesListPage } from '../pages/strategy/objectives/ObjectivesListPage'
+import { ObjectiveDetailPage } from '../pages/strategy/objectives/ObjectiveDetailPage'
+import { ObjectiveFormPage } from '../pages/strategy/objectives/ObjectiveFormPage'
+import { ObjectiveApprovePage } from '../pages/strategy/objectives/ObjectiveApprovePage'
+import { InitiativesListPage } from '../pages/strategy/initiatives/InitiativesListPage'
+import { InitiativeDetailPage } from '../pages/strategy/initiatives/InitiativeDetailPage'
+import { InitiativeFormPage } from '../pages/strategy/initiatives/InitiativeFormPage'
+import { SnapshotPage } from '../pages/strategy/SnapshotPage'
 import { AppShell } from '../../shell/AppShell'
 import { RequireAuth, RequireRole, RequireTenant } from './guards'
 
@@ -87,6 +96,79 @@ export function createAppRouter() {
           element: (
             <RequireRole roles={['platform_owner', 'tenant_admin']}>
               <ToolsLegacyIntegrationsPage />
+            </RequireRole>
+          ),
+        },
+
+        {
+          path: '/strategy',
+          element: (
+            <RequireRole roles={['platform_owner', 'tenant_admin', 'gestor', 'especialista', 'auditor']}>
+              <StrategyHomePage />
+            </RequireRole>
+          ),
+        },
+        {
+          path: '/strategy/objectives',
+          element: (
+            <RequireRole roles={['platform_owner', 'tenant_admin', 'gestor', 'especialista', 'auditor']}>
+              <ObjectivesListPage />
+            </RequireRole>
+          ),
+        },
+        {
+          path: '/strategy/objectives/new',
+          element: (
+            <RequireRole roles={['platform_owner', 'tenant_admin', 'gestor']}>
+              <ObjectiveFormPage />
+            </RequireRole>
+          ),
+        },
+        {
+          path: '/strategy/objectives/:id',
+          element: (
+            <RequireRole roles={['platform_owner', 'tenant_admin', 'gestor', 'especialista', 'auditor']}>
+              <ObjectiveDetailPage />
+            </RequireRole>
+          ),
+        },
+        {
+          path: '/strategy/objectives/:id/approve',
+          element: (
+            <RequireRole roles={['platform_owner', 'tenant_admin', 'gestor']}>
+              <ObjectiveApprovePage />
+            </RequireRole>
+          ),
+        },
+        {
+          path: '/strategy/initiatives',
+          element: (
+            <RequireRole roles={['platform_owner', 'tenant_admin', 'gestor', 'especialista', 'auditor']}>
+              <InitiativesListPage />
+            </RequireRole>
+          ),
+        },
+        {
+          path: '/strategy/initiatives/new',
+          element: (
+            <RequireRole roles={['platform_owner', 'tenant_admin', 'gestor']}>
+              <InitiativeFormPage />
+            </RequireRole>
+          ),
+        },
+        {
+          path: '/strategy/initiatives/:id',
+          element: (
+            <RequireRole roles={['platform_owner', 'tenant_admin', 'gestor', 'especialista', 'auditor']}>
+              <InitiativeDetailPage />
+            </RequireRole>
+          ),
+        },
+        {
+          path: '/strategy/snapshot',
+          element: (
+            <RequireRole roles={['platform_owner', 'tenant_admin', 'gestor', 'especialista', 'auditor']}>
+              <SnapshotPage />
             </RequireRole>
           ),
         },

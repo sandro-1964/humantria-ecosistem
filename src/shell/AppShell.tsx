@@ -83,6 +83,14 @@ export function AppShell() {
             <MenuItem to="/foundation/wizard/bootstrap" label={t('nav.wizard')} />
           </MenuGate>
 
+          <div style={{ marginTop: 10, fontSize: 12, opacity: 0.7 }}>Strategy</div>
+          <MenuGate allowRoles={['platform_owner', 'tenant_admin', 'gestor', 'especialista', 'auditor']}>
+            <MenuItem to="/strategy" label="Strategy" />
+            <MenuItem to="/strategy/objectives" label="Objectives" />
+            <MenuItem to="/strategy/initiatives" label="Initiatives" />
+            <MenuItem to="/strategy/snapshot" label="Snapshot" />
+          </MenuGate>
+
           <div style={{ marginTop: 10, fontSize: 12, opacity: 0.7 }}>{toText(t('nav.tools'))}</div>
           <MenuItem to="/tools/docs" label={t('nav.docs')} />
           <MenuGate allowRoles={['platform_owner', 'tenant_admin']}>

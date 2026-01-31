@@ -1,16 +1,13 @@
-import { Link } from 'react-router-dom'
+import { PageLayout, NavCard } from '../../../design-system/components'
 
 export function StrategyHomePage() {
   return (
-    <div>
-      <h1>Strategy</h1>
-      <nav>
-        <Link to="/strategy/objectives">Objectives</Link>
-        {' | '}
-        <Link to="/strategy/initiatives">Initiatives</Link>
-        {' | '}
-        <Link to="/strategy/snapshot">Snapshot</Link>
-      </nav>
-    </div>
+    <PageLayout title="Strategy">
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(240px, 1fr))', gap: '1rem' }}>
+        <NavCard to="/strategy/objectives" title="Objectives" description="Manage objectives and key results" />
+        <NavCard to="/strategy/initiatives" title="Initiatives" description="Track initiatives linked to objectives" />
+        <NavCard to="/strategy/snapshot" title="Snapshot" description="Portfolio KPIs and metrics" />
+      </div>
+    </PageLayout>
   )
 }

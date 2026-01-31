@@ -5,6 +5,7 @@ import { LoadingState, EmptyState, ErrorState } from '../../../../components/sta
 import { getSupabaseClient } from '../../../../services/supabase/client'
 import { toText } from '../../../../lib/to-text'
 import { useTenant } from '../../../../providers/tenant/TenantProvider'
+import { PageLayout, Button, Table } from '../../../../design-system/components'
 
 type ObjectiveRow = { id: string; code: string; title: string; status: string; cycle_id: string }
 
@@ -36,19 +37,23 @@ export function ObjectivesListPage() {
   if (rows.length === 0) return <EmptyState testid="state-empty-objectives" />
 
   return (
-    <div>
-      <h1>Objectives</h1>
-      <p>
-        <Link to="/strategy/objectives/new">New objective</Link>
-      </p>
-      <ul>
-        {rows.map((o) => (
-          <li key={o.id}>
-            <Link to={`/strategy/objectives/${encodeURIComponent(o.id)}`}>{toText(o.title)}</Link>{' '}
-            <span style={{ opacity: 0.7 }}>({toText(o.code)} / {toText(o.status)})</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <PageLayout
+      title="Objectives"
+      actions={
+        <Link to="/strategy/objectives/new">
+          <Button>New objective</Button>
+        </Link>
+      }
+    >
+      <Table<ObjectiveRow>
+        columns={[
+          { key: 'title', header: 'Title', render: (o) => <Link to={`/strategy/objectives/${encodeURIComponent(o.id)}`}>{toText(o.title)}</Link> },
+          { key: 'code', header: 'Code', render: (o) => toText(o.code) },
+          { key: 'status', header: 'Status', render: (o) => toText(o.status) },
+        ]}
+        rows={rows}
+        getRowKey={(o) => o.id}
+      />
+    </PageLayout>
   )
 }

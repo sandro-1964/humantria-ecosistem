@@ -1,11 +1,20 @@
 import { Link } from 'react-router-dom'
 
+import { PageLayout, Card, Button } from '../../../../design-system/components'
+
 export function ObjectiveFormPage() {
   return (
-    <div>
-      <h1>New Objective</h1>
-      <p>Form placeholder (MVP mínima)</p>
-      <Link to="/strategy/objectives">Back to objectives</Link>
-    </div>
+    <PageLayout
+      title="New Objective"
+      actions={
+        <Link to="/strategy/objectives">
+          <Button variant="secondary">Back to objectives</Button>
+        </Link>
+      }
+    >
+      <Card title="Form">
+        <p style={{ margin: 0 }}>Form placeholder (MVP mínima)</p>
+      </Card>
+    </PageLayout>
   )
 }

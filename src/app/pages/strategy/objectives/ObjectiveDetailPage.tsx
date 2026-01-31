@@ -5,6 +5,7 @@ import { LoadingState, ErrorState } from '../../../../components/states'
 import { getSupabaseClient } from '../../../../services/supabase/client'
 import { toText } from '../../../../lib/to-text'
 import { useTenant } from '../../../../providers/tenant/TenantProvider'
+import { PageLayout, Card, Badge, Button } from '../../../../design-system/components'
 
 type ObjectiveRow = { id: string; code: string; title: string; description: string | null; status: string }
 type InitiativeRow = { id: string; code: string; title: string; status: string }
@@ -49,30 +50,44 @@ export function ObjectiveDetailPage() {
   const canApprove = obj.status === 'draft'
 
   return (
-    <div>
-      <h1>{toText(obj.title)}</h1>
-      <p>Code: {toText(obj.code)} | Status: {toText(obj.status)}</p>
-      {obj.description && <p>{toText(obj.description)}</p>}
-      {canApprove && (
-        <p>
-          <Link to={`/strategy/objectives/${id}/approve`}>Approve</Link>
+    <PageLayout
+      title={toText(obj.title)}
+      actions={
+        <>
+          {canApprove && (
+            <Link to={`/strategy/objectives/${id}/approve`}>
+              <Button>Approve</Button>
+            </Link>
+          )}
+          <Link to="/strategy/objectives">
+            <Button variant="secondary">Back to objectives</Button>
+          </Link>
+        </>
+      }
+    >
+      <Card title="Details">
+        <p style={{ margin: '0 0 0.5rem 0' }}>
+          Code: {toText(obj.code)} | Status: <Badge variant={obj.status === 'active' ? 'success' : obj.status === 'completed' ? 'info' : 'default'}>{toText(obj.status)}</Badge>
         </p>
-      )}
-      <h2>Initiatives</h2>
-      {initQ.isLoading ? (
-        <LoadingState testid="state-loading-initiatives" />
-      ) : (
-        <ul>
-          {initiatives.map((i) => (
-            <li key={i.id}>
-              <Link to={`/strategy/initiatives/${encodeURIComponent(i.id)}`}>{toText(i.title)}</Link> ({toText(i.status)})
-            </li>
-          ))}
-        </ul>
-      )}
-      <p>
-        <Link to="/strategy/objectives">Back to objectives</Link>
-      </p>
-    </div>
+        {obj.description && <p style={{ margin: 0 }}>{toText(obj.description)}</p>}
+      </Card>
+      <div style={{ marginTop: '1rem' }}>
+      <Card title="Initiatives">
+        {initQ.isLoading ? (
+          <LoadingState testid="state-loading-initiatives" />
+        ) : initiatives.length === 0 ? (
+          <p style={{ margin: 0 }}>No initiatives.</p>
+        ) : (
+          <ul style={{ margin: 0, paddingLeft: '1.25rem' }}>
+            {initiatives.map((i) => (
+              <li key={i.id} style={{ marginBottom: '0.25rem' }}>
+                <Link to={`/strategy/initiatives/${encodeURIComponent(i.id)}`}>{toText(i.title)}</Link> (<Badge variant="default">{toText(i.status)}</Badge>)
+              </li>
+            ))}
+          </ul>
+        )}
+      </Card>
+      </div>
+    </PageLayout>
   )
 }

@@ -5,6 +5,7 @@ import { LoadingState, EmptyState, ErrorState } from '../../../../components/sta
 import { getSupabaseClient } from '../../../../services/supabase/client'
 import { toText } from '../../../../lib/to-text'
 import { useTenant } from '../../../../providers/tenant/TenantProvider'
+import { PageLayout, Button, Table } from '../../../../design-system/components'
 
 type InitiativeRow = { id: string; code: string; title: string; status: string; objective_id: string }
 
@@ -36,19 +37,23 @@ export function InitiativesListPage() {
   if (rows.length === 0) return <EmptyState testid="state-empty-initiatives" />
 
   return (
-    <div>
-      <h1>Initiatives</h1>
-      <p>
-        <Link to="/strategy/initiatives/new">New initiative</Link>
-      </p>
-      <ul>
-        {rows.map((i) => (
-          <li key={i.id}>
-            <Link to={`/strategy/initiatives/${encodeURIComponent(i.id)}`}>{toText(i.title)}</Link>{' '}
-            <span style={{ opacity: 0.7 }}>({toText(i.code)} / {toText(i.status)})</span>
-          </li>
-        ))}
-      </ul>
-    </div>
+    <PageLayout
+      title="Initiatives"
+      actions={
+        <Link to="/strategy/initiatives/new">
+          <Button>New initiative</Button>
+        </Link>
+      }
+    >
+      <Table<InitiativeRow>
+        columns={[
+          { key: 'title', header: 'Title', render: (i) => <Link to={`/strategy/initiatives/${encodeURIComponent(i.id)}`}>{toText(i.title)}</Link> },
+          { key: 'code', header: 'Code', render: (i) => toText(i.code) },
+          { key: 'status', header: 'Status', render: (i) => toText(i.status) },
+        ]}
+        rows={rows}
+        getRowKey={(i) => i.id}
+      />
+    </PageLayout>
   )
 }

@@ -5,6 +5,7 @@ import { LoadingState, ErrorState } from '../../../../components/states'
 import { getSupabaseClient } from '../../../../services/supabase/client'
 import { toText } from '../../../../lib/to-text'
 import { useTenant } from '../../../../providers/tenant/TenantProvider'
+import { PageLayout, Card, Button } from '../../../../design-system/components'
 
 export function ObjectiveApprovePage() {
   const { tenantId } = useTenant()
@@ -35,13 +36,20 @@ export function ObjectiveApprovePage() {
     )
 
   return (
-    <div>
-      <h1>Approve Objective</h1>
-      <p>Objective ID: {toText(id)}</p>
-      <button onClick={() => approve.mutate()} disabled={approve.isPending}>
-        Confirm Approve
-      </button>
-      <p><Link to={`/strategy/objectives/${id}`}>Cancel</Link></p>
-    </div>
+    <PageLayout
+      title="Approve Objective"
+      actions={
+        <Link to={`/strategy/objectives/${id}`}>
+          <Button variant="secondary">Cancel</Button>
+        </Link>
+      }
+    >
+      <Card title="Confirmation">
+        <p style={{ margin: '0 0 1rem 0' }}>Objective ID: {toText(id)}</p>
+        <Button onClick={() => approve.mutate()} disabled={approve.isPending} data-testid="btn-confirm-approve">
+          Confirm Approve
+        </Button>
+      </Card>
+    </PageLayout>
   )
 }

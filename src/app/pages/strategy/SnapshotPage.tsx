@@ -5,6 +5,7 @@ import { LoadingState, ErrorState } from '../../../components/states'
 import { getSupabaseClient } from '../../../services/supabase/client'
 import { toText } from '../../../lib/to-text'
 import { useTenant } from '../../../providers/tenant/TenantProvider'
+import { PageLayout, StatCard, Button } from '../../../design-system/components'
 
 type SnapshotRow = {
   tenant_id: string
@@ -52,22 +53,25 @@ export function SnapshotPage() {
     return <ErrorState testid="state-error-snapshot" actions={<pre>{toText(snapshotQ.error instanceof Error ? snapshotQ.error.message : '')}</pre>} />
 
   const s = snapshotQ.data?.[0]
-  if (!s) return <p>No snapshot for this cycle.</p>
+  if (!s) return <PageLayout title="Portfolio Snapshot"><p>No snapshot for this cycle.</p></PageLayout>
 
   return (
-    <div>
-      <h1>Portfolio Snapshot</h1>
-      <table>
-        <tbody>
-          <tr><td>Objectives total</td><td>{toText(s.objectives_total)}</td></tr>
-          <tr><td>Objectives active</td><td>{toText(s.objectives_active)}</td></tr>
-          <tr><td>Objectives completed</td><td>{toText(s.objectives_completed)}</td></tr>
-          <tr><td>Initiatives total</td><td>{toText(s.initiatives_total)}</td></tr>
-          <tr><td>Initiatives active</td><td>{toText(s.initiatives_active)}</td></tr>
-          <tr><td>Updated at</td><td>{toText(s.updated_at_max)}</td></tr>
-        </tbody>
-      </table>
-      <p><Link to="/strategy">Back to Strategy</Link></p>
-    </div>
+    <PageLayout
+      title="Portfolio Snapshot"
+      actions={
+        <Link to="/strategy">
+          <Button variant="secondary">Back to Strategy</Button>
+        </Link>
+      }
+    >
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))', gap: '1rem' }}>
+        <StatCard label="Objectives total" value={toText(s.objectives_total)} />
+        <StatCard label="Objectives active" value={toText(s.objectives_active)} />
+        <StatCard label="Objectives completed" value={toText(s.objectives_completed)} />
+        <StatCard label="Initiatives total" value={toText(s.initiatives_total)} />
+        <StatCard label="Initiatives active" value={toText(s.initiatives_active)} />
+        <StatCard label="Updated at" value={toText(s.updated_at_max ?? '-')} />
+      </div>
+    </PageLayout>
   )
 }

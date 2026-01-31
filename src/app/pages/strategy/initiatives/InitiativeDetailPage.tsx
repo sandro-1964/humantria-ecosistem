@@ -5,6 +5,7 @@ import { LoadingState, ErrorState } from '../../../../components/states'
 import { getSupabaseClient } from '../../../../services/supabase/client'
 import { toText } from '../../../../lib/to-text'
 import { useTenant } from '../../../../providers/tenant/TenantProvider'
+import { PageLayout, Card, Badge, Button } from '../../../../design-system/components'
 
 type InitiativeRow = { id: string; code: string; title: string; description: string | null; status: string; objective_id: string }
 
@@ -33,13 +34,20 @@ export function InitiativeDetailPage() {
   if (!i) return <ErrorState testid="state-not-found-initiative" />
 
   return (
-    <div>
-      <h1>{toText(i.title)}</h1>
-      <p>Code: {toText(i.code)} | Status: {toText(i.status)}</p>
-      {i.description && <p>{toText(i.description)}</p>}
-      <p>
-        <Link to="/strategy/initiatives">Back to initiatives</Link>
-      </p>
-    </div>
+    <PageLayout
+      title={toText(i.title)}
+      actions={
+        <Link to="/strategy/initiatives">
+          <Button variant="secondary">Back to initiatives</Button>
+        </Link>
+      }
+    >
+      <Card title="Details">
+        <p style={{ margin: '0 0 0.5rem 0' }}>
+          Code: {toText(i.code)} | Status: <Badge variant={i.status === 'active' ? 'success' : i.status === 'completed' ? 'info' : 'default'}>{toText(i.status)}</Badge>
+        </p>
+        {i.description && <p style={{ margin: 0 }}>{toText(i.description)}</p>}
+      </Card>
+    </PageLayout>
   )
 }

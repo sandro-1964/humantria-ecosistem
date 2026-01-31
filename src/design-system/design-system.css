@@ -1,0 +1,122 @@
+/* Lovable Design System - Strategy integration */
+:root {
+  --ds-primary: #2563eb;
+  --ds-primary-hover: #1d4ed8;
+  --ds-secondary: #64748b;
+  --ds-success: #22c55e;
+  --ds-warning: #f59e0b;
+  --ds-info: #3b82f6;
+  --ds-border: rgba(0,0,0,0.08);
+  --ds-radius: 8px;
+  --ds-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+/* Button */
+.ds-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: var(--ds-radius);
+  border: 1px solid transparent;
+  cursor: pointer;
+  text-decoration: none;
+  transition: background 0.2s, border-color 0.2s;
+}
+.ds-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+.ds-btn--primary { background: var(--ds-primary); color: white; }
+.ds-btn--primary:hover:not(:disabled) { background: var(--ds-primary-hover); }
+.ds-btn--secondary { background: #f1f5f9; color: #334155; border-color: var(--ds-border); }
+.ds-btn--secondary:hover:not(:disabled) { background: #e2e8f0; }
+.ds-btn--ghost { background: transparent; color: #64748b; }
+.ds-btn--ghost:hover:not(:disabled) { background: #f8fafc; }
+.ds-btn--destructive { background: #ef4444; color: white; }
+.ds-btn--destructive:hover:not(:disabled) { background: #dc2626; }
+
+/* Card */
+.ds-card {
+  background: white;
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius);
+  box-shadow: var(--ds-shadow);
+  overflow: hidden;
+}
+.ds-card__header { padding: 1rem 1.25rem; font-weight: 600; font-size: 1rem; border-bottom: 1px solid var(--ds-border); }
+.ds-card__content { padding: 1.25rem; }
+.ds-card__footer { padding: 1rem 1.25rem; border-top: 1px solid var(--ds-border); background: #f8fafc; }
+
+/* Badge */
+.ds-badge {
+  display: inline-block;
+  padding: 0.2em 0.5em;
+  font-size: 0.75rem;
+  font-weight: 500;
+  border-radius: 4px;
+}
+.ds-badge--default { background: #e2e8f0; color: #475569; }
+.ds-badge--success { background: #dcfce7; color: #166534; }
+.ds-badge--warning { background: #fef3c7; color: #92400e; }
+.ds-badge--info { background: #dbeafe; color: #1e40af; }
+
+/* Table */
+.ds-table-wrapper { overflow-x: auto; border: 1px solid var(--ds-border); border-radius: var(--ds-radius); }
+.ds-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+.ds-table th, .ds-table td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--ds-border); }
+.ds-table th { background: #f8fafc; font-weight: 600; }
+.ds-table tbody tr:hover { background: #f8fafc; }
+.ds-table tbody tr[role="button"] { cursor: pointer; }
+
+/* Page layout */
+.ds-page { padding: 1.5rem; }
+.ds-page__header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+.ds-page__title { margin: 0; font-size: 1.5rem; font-weight: 700; }
+.ds-page__actions { display: flex; gap: 0.5rem; }
+.ds-page__body { }
+
+/* Nav card */
+.ds-nav-card {
+  display: block;
+  padding: 1.25rem;
+  background: white;
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.ds-nav-card:hover { border-color: var(--ds-primary); box-shadow: var(--ds-shadow); }
+.ds-nav-card__title { margin: 0 0 0.25rem 0; font-size: 1rem; font-weight: 600; }
+.ds-nav-card__desc { margin: 0; font-size: 0.875rem; color: #64748b; }
+
+/* Stat card */
+.ds-stat-card {
+  padding: 1rem 1.25rem;
+  background: white;
+  border: 1px solid var(--ds-border);
+  border-radius: var(--ds-radius);
+}
+.ds-stat-card__label { display: block; font-size: 0.75rem; color: #64748b; margin-bottom: 0.25rem; }
+.ds-stat-card__value { font-size: 1.25rem; font-weight: 700; }
+
+/* Sidebar */
+.ds-sidebar {
+  width: 260px;
+  padding: 1rem;
+  border-right: 1px solid var(--ds-border);
+  background: #fafafa;
+}
+.ds-sidebar-nav { margin-bottom: 1rem; }
+.ds-sidebar-nav__label { font-size: 0.75rem; color: #64748b; margin-bottom: 0.5rem; padding: 0 0.5rem; }
+.ds-sidebar-nav__items { display: flex; flex-direction: column; gap: 2px; }
+.ds-sidebar-nav-item {
+  display: block;
+  padding: 0.5rem 0.75rem;
+  border-radius: var(--ds-radius);
+  text-decoration: none;
+  color: #334155;
+  font-size: 0.875rem;
+}
+.ds-sidebar-nav-item:hover { background: #f1f5f9; }
+.ds-sidebar-nav-item--active { background: rgba(37,99,235,0.1); color: var(--ds-primary); font-weight: 600; }

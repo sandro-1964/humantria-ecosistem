@@ -1,14 +1,14 @@
-/**
- * Router canônico: BrowserRouter + Routes + Shell com Outlet.
- */
-import { BrowserRouter, Routes } from 'react-router-dom'
-import { routes } from './routes'
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import StrategyHomePage from '../pages/strategy/StrategyHomePage'
+import DiagnosticsPage from '../pages/DiagnosticsPage'
 
-export function AppRouter() {
+export default function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {routes()}
+        <Route path="/" element={<Navigate to="/strategy" replace />} />
+        <Route path="/strategy" element={<StrategyHomePage />} />
+        <Route path="/__diag" element={<DiagnosticsPage />} />
       </Routes>
     </BrowserRouter>
   )

@@ -1,4 +1,4 @@
-﻿{
+{
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
@@ -32,8 +32,8 @@
     "noFallthroughCasesInSwitch": true,
     "noUncheckedSideEffectImports": true
   },
-  "include": ["src/main.tsx", "src/App.tsx", "src/app/router/**/*", "src/app/pages/**/*"],
-  "exclude": ["src/ui/lovable", "src/app/strategy", "src/app/diag", "src/app/ui_contract", "src/shell", "src/components", "src/design-system", "src/hooks", "src/i18n", "src/lib", "src/providers", "src/services"]
+  "include": ["src/main.tsx", "src/App.tsx", "src/app/router/**/*", "src/app/pages/**/*", "src/shell/**/*", "src/ui/lovable/**/*", "src/lib/**/*"],
+  "exclude": ["src/app/strategy", "src/app/diag", "src/app/ui_contract", "src/components", "src/design-system", "src/hooks", "src/i18n", "src/providers", "src/services", "src/ui/lovable/app-standalone"]
 }
 
 
